@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="student/fragments :: headFragment">
+        <title id="pageTitle">AIBTGlobal Student - Leave of Absence</title>
+    </head>
+    
+    <body>
+        <nav th:replace="student/fragments :: navFragment"></nav>
+        
+        <div class="bottom">
+            
+            <div class="container rightcon">
+                <p class="rightTit" id="check_defer">Leave of Absence</p>
+                
+                <form class="needs-validation" id="loaForm" method="post" th:action="${#httpServletRequest.requestURI}" th:object="${loAApplication}" enctype="multipart/form-data">
+                    
+                    <div class="tijiaocon">
+                        
+                        <div class="tijiaoconlist">
+                            <p class="tijiaoconlistL">
+                                Subject:
+                            </p>
+                            
+                            <p class="tijiaoconlistR">
+                                <select class="issureselect">
+                                    <option value="1">
+                                        Family Issue
+                                    </option>
+                                    <option value="2">
+                                        Medical Issue
+                                    </option>
+                                    <option value="3">
+                                        Personal Issue
+                                    </option>
+                                    <option value="4">
+                                        Academic Issue
+                                    </option>
+                                    <option value="5">
+                                        Others
+                                    </option>
+                                </select>
+                            </p>
+                        </div>
+                        
+                        <div class="tijiaoconlist issure">
+                            <p class="tijiaoconlistL">
+                                Others:
+                            </p>
+                            <p class="tijiaoconlistR">
+                                <input type="text" id="subject" th:field="*{subject}" class="form-control" required>
+                            </p>
+                        </div>
+                        
+                        <div class="tijiaoconlist">
+                            <p class="tijiaoconlistL">
+                                Content:
+                            </p>
+                            <p class="tijiaoconlistR">
+                                <textarea th:field="*{content}" class="form-control" id="comments" required></textarea>
+                            </p>
+                        </div>
+                        
+                        <div class="tijiaoconlist">
+                            <p class="tijiaoconlistL">
+                                Attachment:
+                            </p>
+                            <p class="tijiaoconlistR">
+                                Supporting evidence includes documentation such as<br>
+                                • Medical certificates;<br>
+                                • Flight itinerary; or<br>
+                                • Affidavit<br>
+                                • Court Order<br>
+                                • Written directive(s) issued by governmental body(ies)<br>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="tijiaoconlist" style="line-height: 1.5;">
+                        <div class="tijiaoconlistR">
+                            <div class="file-loading">
+                                <input id="input-files" type="file" th:field="*{multipartFilesDocument}" multiple>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bootbtn">
+                        <button type="submit" class="btn btn-success" onclick="return count_words();">Submit</button>
+                    </div>
+                    
+                    <input type="hidden" th:field="*{start}">
+                    <input type="hidden" th:field="*{end}">
+                    <input type="hidden" th:field="*{address}">
+                    <input type="hidden" th:field="*{email}">
+                    <input type="hidden" th:field="*{phone}">
+                    <input type="hidden" th:field="*{trainer}">
+                </form>
+            </div>
+        </div>
+        
+        
+        <script>
+            $(document).ready(function(){
+                $('#dropdown-list').removeClass("d-none");
+            });
+            
+            $('.issureselect').change(function(){
+                if($(this).val()==5){
+                    $("#subject").val("");
+                    $('.issure').show();
+                }
+                else{
+                    $("#subject").val($('.issureselect option:selected').text().trim());
+                    $('.issure').hide();
+                }
+            });
+            
+            $(document).ready(function(){
+                $("#subject").val($('.issureselect option:selected').text().trim());
+                
+                var date_start= $("#start").val();
+                var date_end=$("#end").val();
+                if(getDays(date_start,date_end) >= 4){
+                	$('#check_defer').html("Deferment");
+                	}
+                else{
+                	$('#check_defer').html("Leave of Absence");
+                	}
+            });
+            
+                    
+        </script>
+    </body>
+</html>

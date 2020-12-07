@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headFragment">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <title th:include=":: #pageTitle"></title>
+        <!-- CSRF TOKEN -->
+        <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}"/>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- signature_pad library-->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <!-- Link to use icon-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/js/fileinput.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/themes/fas/theme.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/js/laydate/theme/default/laydate.css}">
+    <script th:src="@{/js/laydate/laydate.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/confirm.css}">
+    <script th:src="@{/js/common.js}"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navFragment">
+        <a href="" class="navbar-brand logo"><img th:src="@{/image/logo.png}"></a>
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarSupportedContent" style="">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown my-2" th:classappend="${hiddenNavItem} ? ${hiddenNavItem} : ''">
+                    <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${session.searchTicketType}">
+                        [[${session.searchTicketType}]]
+                    </a>
+                    <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${session.searchTicketType}">
+                        All Applications
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="/staff/all">All Applications</a>
+                        <a class="dropdown-item" href="/staff/loa">Leave of Absence</a>
+                        <a class="dropdown-item" href="/staff/defer">Deferment</a>
+                        <a class="dropdown-item" href="/staff/coc">Change of Campus</a>
+                        <a class="dropdown-item" href="/staff/randw">Withdrawal and Release</a>
+                        <a class="dropdown-item" href="/staff/coq">Change of Qualification</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-md-0" method="post" th:action="@{/logout}" th:if="${session.username}">
+            	<span style="color:white; padding-right:20px;">Welcome, [[${session.firstname}]] </span>
+                <input type="hidden" name="redirect" th:value="${#httpServletRequest.requestURI}">
+                <button type="submit" class="btn btn-success my-2"><span>Log out</span></button>
+            </form>
+            <form class="form-inline my-2 my-md-0" method="post" th:action="@{/login}" th:unless="${session.username}">
+                <div class="input-group my-2">
+                        <span class="input-group-prepend border-right-0">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </span>
+                    <input class="form-control mr-sm-2 border-left-0" id="inputName" type="text" name="username" placeholder="Username">
+                </div>
+                <div class="input-group my-2">
+                        <span class="input-group-prepend border-right-0">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-unlock-alt"></i>
+                            </span>
+                        </span>
+                    <input class="form-control mr-sm-2 border-left-0" id="inputPassword" type="password" name="password" placeholder="Password">
+                </div>
+                <input type="hidden" name="redirect" th:value="${#httpServletRequest.requestURI}">
+                <button type="submit" class="btn btn-success my-2"><span>Log in</span></button>
+            </form>
+        </div>
+    </nav>
+</body>
+</html>

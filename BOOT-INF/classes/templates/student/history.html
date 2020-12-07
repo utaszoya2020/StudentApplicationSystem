@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:insert="student/fragments :: headFragment">
+<title id="pageTitle">AIBTGlobal Student - Historical
+	Application</title>
+</head>
+<body>
+	<nav th:replace="student/fragments :: navFragment"></nav>
+
+	<div class="bottom">
+        <div class="Left">
+            <form style="margin-left:25px;" method="post" th:action="@{/student/history}">
+                <div class="form-group row">
+                	<div class="col-8">
+                    	<input type="text" class="form-control" placeholder="input search text" name="searchTicketNum" th:value="${session.searchTicketNum}">
+                    </div>
+                    <div>
+                    	<button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="searchresult">
+                <!-- Accordion Feature -->
+                <button class="accordion">Pending</button>
+                <div class="panel">
+                    <div class="resultlist" th:each="app : ${applicationList}" th:classappend="${(app.ticketNum==urlTicketNum ? 'active ' : '')+(app.status==T(au.edu.aibtglobal.util.Consts).STATUS_PENDING ? 'app_show' : 'app_hide')}" 
+                    	th:onclick="'window.location.href = \'' + @{/student/history/{ticketNum}(ticketNum=${app.ticketNum})} + '\''">
+                        <!-- Status Check -->
+                        <div>
+                            <p>
+                                <b>Date:</b>[[${#dates.format(app.created, 'dd/MM/yyyy HH:mm')}]]
+                            </p>
+                            <p>
+                                <b>Subject:</b>[[${app.subject}]]
+                            </p>
+                            <p>
+                                <b>Status:</b>[[${app.status}]]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="accordion">Processing</button>
+                <div class="panel">
+                    <div class="resultlist" th:each="app : ${applicationList}" th:classappend="${(app.ticketNum==urlTicketNum ? 'active ' : '')+(app.status==T(au.edu.aibtglobal.util.Consts).STATUS_PROCESSING ? 'app_show' : 'app_hide')}"  
+                    	th:onclick="'window.location.href = \'' + @{/student/history/{ticketNum}(ticketNum=${app.ticketNum})} + '\''">
+                        <!-- Status Check -->
+                        <div>
+                            <p>
+                                <b>Date:</b>[[${#dates.format(app.created, 'dd/MM/yyyy HH:mm')}]]
+                            </p>
+                            <p>
+                                <b>Subject:</b>[[${app.subject}]]
+                            </p>
+                            <p>
+                                <b>Status:</b>[[${app.status}]]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="accordion">Finalized</button>
+                <div class="panel">
+                    <div class="resultlist" th:each="app : ${applicationList}" th:classappend="${(app.ticketNum==urlTicketNum ? 'active ' : '')+(app.status==T(au.edu.aibtglobal.util.Consts).STATUS_FINALIZED ? 'app_show' : 'app_hide')}" 
+                    	th:onclick="'window.location.href = \'' + @{/student/history/{ticketNum}(ticketNum=${app.ticketNum})} + '\''">
+                        <!-- Status Check -->
+                        <div>
+                            <p>
+                                <b>Date:</b>[[${#dates.format(app.created, 'dd/MM/yyyy HH:mm')}]]
+                            </p>
+                            <p>
+                                <b>Subject:</b>[[${app.subject}]]
+                            </p>
+                            <p>
+                                <b>Status:</b>[[${app.status}]]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		<div class="right">
+			<div th:if="${!#strings.isEmpty(urlTicketNum)}">
+				<p class="rightTit">[[${applicationObj.type}]]</p>
+
+				<!-- STATUS: SUBMITTED -->
+				<div class="rightcon"
+					th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_SUBMITTED)}">
+					<div class="three">
+						<p>
+							<img th:src="@{/image/xiaolian.png}" class="xiaolian">
+						</p>
+						<p>
+							Your application has been submitted successfully!<br> Our
+							staff will process your application within 48 hours.<br>
+							Thanks for your patience!
+						</p>
+					</div>
+				</div>
+
+				<!-- STATUS: PROCESSING -->
+				<div class="rightcon"
+					th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_PENDING_APPROVAL)}">
+					<div th:replace="student/fragments :: processing"></div>
+				</div>
+
+				<!-- LOA Approved-->
+				<div
+					th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_LOA)} or ${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_DEFER)}">
+					<div class="rightcon"
+						th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED)}">
+						<div class="three">
+							<p>
+								<img th:src="@{/image/xiaolian.png}" class="xiaolian">
+							</p>
+							<p>
+								Your application has been approved!<br> Please download the
+								approved Leave of Absence form.
+							</p>
+
+							<!-- Add download pdf -->
+							<p>
+								<b>Report download:</b>
+							</p>
+							<p>
+								<a target="_blank"
+									th:href="@{/student/history/pdf/{ticketNum}(ticketNum=${applicationObj.ticketNum})}">Application
+									Report</a>
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- COC Final Approved-->
+				<div
+					th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_COC)}">
+					<div class="rightcon"
+						th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED)}
+                    	and ${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_FINALIZED)}">
+						<div class="three">
+							<p>
+								<img th:src="@{/image/xiaolian.png}" class="xiaolian">
+							</p>
+							<p>
+								Your application has been approved!<br> Please download the
+								approved Change of Campus form.
+							</p>
+
+							<!-- Add download pdf -->
+							<p>
+								<b>Report download:</b>
+							</p>
+							<p>
+								<a target="_blank"
+									th:href="@{/student/history/pdf/{ticketNum}(ticketNum=${applicationObj.ticketNum})}">Application
+									Report</a>
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- COC Intermediate Approved-->
+				<div
+					th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_COC)}">
+					<div class="rightcon"
+						th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED)}
+                    and ${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_PROCESSING)}">
+						<div class="three">
+							<p>
+								<img th:src="@{/image/xiaolian.png}" class="xiaolian">
+							</p>
+							<p>
+								Your application has been approved by a course coordinator or a
+								head of school!<br> Now it is sent to student support team
+								to process!<br> Thanks for your patience!
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- STATUS: REQUIRE DOCUMENTS -->
+				<div class="rightcon"
+					th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_PENDING_DOCUMENT)}">
+					<div class="three">
+						<p>
+							<img th:src="@{/image/wrong.png}" class="xiaolian">
+						</p>
+						<div th:if="${logs != null}">
+							<div th:each="log, iterStat : ${logs}"
+								th:if="${iterStat.index==iterStat.size-1}">
+								<div
+									th:if="${#strings.equals(applicationObj.statusDesc, log.subject)}">
+									[[${log.content}]]</div>
+							</div>
+						</div>
+						<form method="post" th:action="${#httpServletRequest.requestURI}"
+							enctype="multipart/form-data">
+							<div class="file-loading">
+								<input id="input-files" type="file"
+									name="multipartFilesDocument" multiple>
+							</div>
+							<div class="bootbtn my-2">
+								<button type="submit" class="btn btn-success">Submit</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<!-- STATUS: REJECTED -->
+				<div class="rightcon"
+					th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_REJECTED)}">
+					<div th:replace="student/fragments :: rejected"></div>
+				</div>
+
+				<!-- LOA DETAILS -->
+				<div
+					th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_LOA)} or ${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_DEFER)}">
+					<div class="rightcon">
+						<div class="one">
+							<p>
+								<b>TickedID:</b>[[${applicationObj.ticketNum}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Name:</b><span
+									th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+							</p>
+							<p>
+								<b>ID:</b>[[${userObj.id}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Campus:</b>[[${userObj.campus}]]
+							</p>
+							<p>
+								<b>Trainer:</b>[[${applicationObj.trainer}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Current course:</b><span th:text="${session.course}"></span>
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Address:</b>[[${userObj.address}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Email:</b>[[${userObj.email}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Phone:</b>[[${userObj.phone}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Leave of Absence Start Date:</b> <span id="start">
+									[[${applicationObj.field_1}]] </span>
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Leave of Absence End Date:</b> <span id="end">
+									[[${applicationObj.field_2}]] </span>
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Total weeks:</b> <span class="Totalw"> </span>
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Subject:</b> <span> [[${applicationObj.subject}]] </span>
+							</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Content:</b>
+							</p>
+							<p>[[${applicationObj.content}]]</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Attachment:</b>
+							</p>
+							<div class="links" th:each="doc : ${documentlist}">
+								<a target="_blank"
+									th:href="@{/student/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- COC DETAILS -->
+				<div
+					th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_COC)}">
+					<div class="rightcon">
+						<div class="one">
+							<p>
+								<b>TickedID:</b>[[${applicationObj.ticketNum}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Name:</b><span
+									th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+							</p>
+							<p>
+								<b>ID:</b>[[${userObj.id}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Campus:</b>[[${userObj.campus}]]
+							</p>
+							<p>
+								<b>Change to Campus:</b>[[${applicationObj.field_1}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Intake Month:</b>[[${applicationObj.field_2}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Traniner:</b>[[${applicationObj.trainer}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Current course:</b><span th:text="${session.course}"></span>
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Address:</b>[[${userObj.address}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Email:</b>[[${userObj.email}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Phone:</b>[[${userObj.phone}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Subject:</b> <span> [[${applicationObj.subject}]] </span>
+							</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Content:</b>
+							</p>
+							<p>[[${applicationObj.content}]]</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Attachment:</b>
+							</p>
+							<div class="links" th:each="doc : ${documentlist}">
+								<a target="_blank"
+									th:href="@{/student/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+						</div>
+
+					</div>
+					<div class="rightcon">
+						<div class="three">
+							<p>
+								<b>Staff Attachment:</b>
+							</p>
+							<div class="links" th:each="doc : ${staffdocumentlist}">
+								<a target="_blank"
+									th:href="@{/student/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- RANDW DETAILS -->
+				<div
+					th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_RandW)}">
+					<div class="rightcon">
+						<div class="one">
+							<p>
+								<b>TickedID:</b>[[${applicationObj.ticketNum}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Name:</b><span
+									th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+							</p>
+							<p>
+								<b>ID:</b>[[${userObj.id}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Campus:</b>[[${userObj.campus}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Traniner:</b>[[${applicationObj.trainer}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Current course:</b><span th:text="${course}"></span>
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Address:</b>[[${userObj.address}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Email:</b>[[${userObj.email}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Phone:</b>[[${userObj.phone}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Subject:</b> <span> [[${applicationObj.subject}]] </span>
+							</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Content:</b>
+							</p>
+							<p>[[${applicationObj.content}]]</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Attachment:</b>
+							</p>
+							<div class="links" th:each="doc : ${documentlist}">
+								<a target="_blank"
+									th:href="@{/student/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+						</div>
+					</div>
+					<div class="rightcon">
+						<div class="three">
+							<p>
+								<b>Staff Attachment:</b>
+							</p>
+							<div class="links" th:each="doc : ${staffdocumentlist}">
+								<a target="_blank"
+									th:href="@{/student/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- COQ DETAILS -->
+				<div
+					th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_COQ)}">
+					<div class="rightcon">
+						<div class="one">
+							<p>
+								<b>TickedID:</b>[[${applicationObj.ticketNum}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Name:</b><span
+									th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+							</p>
+							<p>
+								<b>ID:</b>[[${userObj.id}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Campus:</b>[[${userObj.campus}]]
+							</p>
+							<p>
+								<b>APP FIELD1:</b>[[${applicationObj.field_1}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>APP FIELD2:</b>[[${applicationObj.field_2}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Traniner:</b>[[${applicationObj.trainer}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Current course:</b><span th:text="${course}"></span>
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Address:</b>[[${userObj.address}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Email:</b>[[${userObj.email}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Phone:</b>[[${userObj.phone}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Subject:</b> <span> [[${applicationObj.subject}]] </span>
+							</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Content:</b>
+							</p>
+							<p>[[${applicationObj.content}]]</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Attachment:</b>
+							</p>
+							<div class="links" th:each="doc : ${documentlist}">
+								<a target="_blank"
+									th:href="@{/student/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+						</div>
+					</div>
+					<div class="rightcon">
+						<div class="three">
+							<p>
+								<b>Staff Attachment:</b>
+							</p>
+							<div class="links" th:each="doc : ${staffdocumentlist}">
+								<a target="_blank"
+									th:href="@{/student/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Change layout format -->
+				<div class="rightcon" th:if="${logs != null}">
+					<div class="three" th:each="log : ${logs}">
+						<p>
+							<b>[[${log.fullName}]]([[${log.createdBy}]])</b>
+							[[${#dates.format(log.created, 'dd/MM/yyyy HH:mm')}]]
+						</p>
+						<p>[[${log.subject}]]</p>
+						<p>[[${log.content}]]</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        $(document).ready(function(){
+            $('#dropdown-list').removeClass("d-none");
+        });
+        
+        $('.resultlist').click(function () {
+            $('.news').eq($(this).index()).show().siblings('.news').hide()
+        })
+
+        $(document).ready(function(){
+            if ($("#start").text().trim() != '') {
+                $('.Totalw').text(getDays($("#start").text().trim(),
+                    $("#end").text().trim()).toFixed(1));
+            }
+		});
+		
+		$(document).ready(function(){
+			$('.active.app_show').parent().show();
+        });
+        
+        
+        /* Alex Accordion */
+        var acc = document.getElementsByClassName("accordion");
+        for (var i = 0; i < acc.length; i++)
+        {
+            acc[i].addEventListener("click", function(){
+                /* Toggle between adding and removing the "active" class, to highlight the button that controls the panel */
+                this.classList.toggle("active");
+                
+                /* Toggle between hiding and showing the active panel */
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block")
+                {
+                    panel.style.display = "none";
+                }
+                else
+                {
+                    panel.style.display = "block";
+                }
+            });
+        } 
+    </script>
+</body>
+</html>

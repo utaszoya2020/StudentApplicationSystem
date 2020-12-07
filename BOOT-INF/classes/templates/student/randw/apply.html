@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+        <head th:insert="student/fragments :: headFragment">
+        <title id="pageTitle">AIBTGlobal Student - Release or Withdraw</title>
+    </head>
+    
+    <body>
+        <nav th:replace="student/fragments :: navFragment"></nav>
+        
+        <div class="bottom" style="padding-bottom: 300px">
+            <div class="">
+                <p class="rightTit">Release or Withdraw</p>
+                
+                <div class="rightcon">
+                    <div class="two">
+                        <p>
+                            <b>Name:</b><span th:text="|${userObj.firstname} ${userObj.lastname}|">
+                        </p>
+                        <p>
+                            <b>ID:</b>[[${userObj.id}]]
+                        </p>
+                    </div>
+                    <div class="two">
+                        <p>
+                            <b>Campus:</b>[[${userObj.campus}]]
+                        </p>
+                        <p>
+                            <b>Current course:</b><span th:text="${session.course}"></span>
+                        </p>
+                    </div>
+                    <div class="two">
+                        <p>
+                            <b>Course Start Date:</b><span th:text="${#dates.format(userObj.getStartdate(),'dd-MM-yyyy')}"></span>
+                        </p>
+                        <p>
+                            <b>Course End Date:</b><span th:text="${#dates.format(userObj.getEnddate(),'dd-MM-yyyy')}"></span>
+                        </p>
+                    </div>                    
+                    
+                    <form id="randwForm" method="post" th:action="${#httpServletRequest.requestURI}" th:object="${randwApplication}">
+                        <div class="one">
+                            <p>
+                                <b>Trainer:</b>
+                                <span>
+                                    <input type="text" id="trainer" th:field="*{trainer}" required>
+                                </span>
+                            </p>
+                            <p>
+                                <b>Please <a href="#" onclick="callstaff(); return false;">contact us</a> if your details are incorrect</b>    
+                            </p>
+                        </div>
+						<div class="one">
+                            <p>
+                                <b>Address:</b>
+                                <span>
+                                    <input type="text" id="addressText" th:field="*{address}" disabled>
+                                </span>
+                                <a class="edit">
+                                    <img th:src="@{/image/edit.png}" id="addressEdit">
+                                </a>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Email:</b>
+                                <span>
+                                    <input type="text" id="emailText" th:field="*{email}" required pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
+								oninvalid="this.setCustomValidity('Invalid email address!')"
+								oninput="setCustomValidity('')" disabled>
+                                </span>
+                                <a class="edit">
+                                    <img th:src="@{/image/edit.png}" id="emailEdit">
+                                </a>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Phone:</b>
+                                <span>
+                                    <input type="text" id="phoneText" th:field="*{phone}" required pattern="[0-9]{10}"
+								oninvalid="this.setCustomValidity('Invalid phone number! Please insert your number without space or dash')"
+								oninput="setCustomValidity('')" disabled>
+                                </span>
+                                <a class="edit">
+                                    <img th:src="@{/image/edit.png}" id="phoneEdit">
+                                </a>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                 <input type="hidden" id="radselect" name="selection" value="1" th:field="*{selection}">
+                            </p>
+                        </div>
+
+            			<div class="rad" >
+		            		<b>Subject of application:</b><br>
+		            		<!--<div class="custom-control custom-radio custom-control-inline">
+			                	<input type="radio" id="radio" name="test" class="custom-control-input" value="Transfer" th:field="*{subject}">
+			                	<label class="custom-control-label" for="radio">Transfer to other provider</label>
+			                </div>
+			                <div class="custom-control custom-radio custom-control-inline">
+	            			    <input type="radio" id="radio1" name="test" class="custom-control-input" value="Withdraw" th:field="*{subject}">
+				                <label class="custom-control-label" for="radio1">Withdraw and discontinue study in Australia</label>
+							</div>-->
+							
+			                 <input type="radio" style="display: none;"  id="radio" name="test" class="custom-control-input" value="" th:field="*{subject}">
+			                 <input type="radio" style="display: none;" id="radio1" name="test" class="custom-control-input" value="" th:field="*{subject}">
+			                 
+                			<button type="" id="transfer1" class="btn btn-lg btn-outline-success" value="" th:field="*{subject}" onclick="OnButton1()">Transfer</button>
+			                <button type="" id="withdraw"  class="btn btn-lg btn-outline-success" value="" th:field="*{subject}" onclick="OnButton2()">Withdraw</button>
+			               
+						</div>
+
+			            <div id="popup" style="display: none;  width: 13rem; margin-top: 50px; height: auto; text-align: center;
+                            background: #ddd; transition: ease-in-out 2s; border-radius: .3rem;">
+                            Transfer to other provider
+			            </div>			
+            			<div id="popup1" style="display: none;  width: 20rem; margin-top: 50px; height: auto; text-align: center;
+			                background: #ddd; transition: ease-in-out 2s; border-radius: .3rem;">
+                            Withdraw and discontinue study in Australia
+			            </div>
+            			<br>
+			            <div class="d-flex justify-content-end">
+			                <!--<button type="sumbit" id="transfer_button" class="btn btn-success mb-2">Next</button>-->
+			           </div>
+				    </form>
+                </div>
+            </div>
+        </div>
+
+        
+        <script>
+		    
+        	var e = document.getElementById('transfer1');
+		    e.onmouseover = function() {
+		        document.getElementById('popup').style.display = 'block';
+	    	}
+		    e.onmouseout = function() {
+		      document.getElementById('popup').style.display = 'none';
+		    }
+		
+    		var f = document.getElementById('withdraw');
+	    	f.onmouseover = function() {
+		        document.getElementById('popup1').style.display = 'block';
+		    }
+		    f.onmouseout = function() {
+	            document.getElementById('popup1').style.display = 'none';
+		    }
+
+		    function in_out(e){
+                if(e.type=='mouseover'){
+	                document.getElementById('textbox').style.display='inline';
+                }
+                else if(e.type=='mouseout'){
+	                document.getElementById('textbox').style.display='none';
+	            }
+            }
+		    /*
+            document.getElementById("transfer1").addEventListener("click", function() {
+		        localStorage.setItem("selectval", "0");
+		    });
+		    document.getElementById("withdraw").addEventListener("click", function() {
+		        localStorage.setItem("selectval", "1");
+		    });*/
+
+             $(document).ready(function(){
+                $('#dropdown-list').removeClass("d-none");   // Added by Dahoo, let dropdown list show
+        	    //$("#transfer_button").hide();
+        	    //$("#withdraw_button").hide();
+        	    $("#radio").prop("checked",true);
+
+        	    /*
+                $('input[name="test"]:radio').change(function(){
+    	            if($("#radio").prop("checked",true)){
+    	                //localStorage.setItem("selectval", "0");
+    	                //document.getElementById("radselect").value = "0";
+    	                console.log("check radio");
+                        $("#transfer_button").show();
+                        $("#withdraw_button").hide();
+                    }else if($("#radio1").prop("checked",true)){
+                        //localStorage.setItem("selectval","1");
+                        //document.getElementById("radselect").value = "1";
+                        console.log("check radio1");
+                        $("#transfer_button").hide();
+                        $("#withdraw_button").show();
+                    }
+                });
+        	    */
+            
+            });
+
+    	    function OnButton1()
+	        {
+	            //document.randwForm.action = "/student/randw/reasons1";
+		        //document.Form1.target = "_blank";    // Open in a new window
+		        //document.randwForm.submit();             // Submit the page
+				document.getElementById("radio").value = "Transfer";
+	 
+						        
+            }
+
+		    function OnButton2()
+		    {
+		        //document.randwForm.action = "/student/randw/reasons2"
+		        //document.Form1.target = "_blank";    // Open in a new window
+		        //document.randwForm.submit();             // Submit the page
+		        document.getElementById("radio").value = "Withdraw";
+		        
+		    }
+		    function validform(){
+		    	var email= document.getElementById("emailText").value;
+				var phonenum= document.getElementById("phoneText").value;
+				
+				
+				var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+				/*if(email.match(mailformat)){
+					return true;
+				}else{
+					document.getElementById("emailText").focus();
+					alert("You have entered an invalid email address!");
+					return false;
+				}
+				 return false;*/
+					
+		    }
+        </script>
+    </body>
+</html>        

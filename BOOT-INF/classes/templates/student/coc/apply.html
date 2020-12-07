@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="student/fragments :: headFragment">
+        <title id="pageTitle">AIBTGlobal Student - Change of Campus</title>
+    </head>
+    
+    <body>
+        <nav th:replace="student/fragments :: navFragment"></nav>
+        
+        <div class="bottom" style="padding-bottom: 300px">
+            <div class="">
+                <p class="rightTit">Change of Campus</p>
+                
+                <div class="rightcon">
+                    <div class="two">
+                        <p>
+                            <b>Name:</b><span th:text="|${userObj.firstname} ${userObj.lastname}|">
+                        </p>
+                        <p>
+                            <b>ID:</b>[[${userObj.id}]]
+                        </p>
+                    </div>
+                    
+                    <form id="cocForm" method="post" th:action="${#httpServletRequest.requestURI}" th:object="${coCApplication}">
+                        <div class="two">
+                            <p>
+                                <b>Campus:</b>[[${userObj.campus}]]
+                            </p>
+                            <p>
+                                <b>Change to Campus:</b>
+                                <select id="campus" th:field="*{changeTo}" required>
+                                	<option th:each="campus: ${campusList}"
+                                		th:value="${campus}" 
+                                			th:text="${campus}">
+                                </select>
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p>
+                                <b>Intake Month:</b>
+                                <select id="eq_num" th:field="*{intakeMonth}"></select>
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p>
+                                <b>Current course:</b><span th:text="${session.course}"></span>
+                            </p>
+                        </div>
+                        <div class="two">
+                            <p>
+                                <b>Course Start Date:</b><span th:text="${#dates.format(userObj.getStartdate(),'dd-MM-yyyy')}"></span>
+                            </p>
+                            
+                            <p>
+                                <b>Course End Date:</b><span th:text="${#dates.format(userObj.getEnddate(),'dd-MM-yyyy')}"></span>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Traniner:</b>
+                                <span>
+                            		<input type="text" id="trainer" th:field="*{trainer}" required>
+                            	</span>
+                            </p>
+                            <p>
+                                <b>Please <a href="#" onclick="callstaff(); return false;">contact us</a> if your details are incorrect</b>    
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p>
+                                <b>Address:</b>
+                                <span>
+                                <input type="text" id="addressText" th:field="*{address}" disabled>
+                                	</span>
+                                <a class="edit">
+                                    <img th:src="@{/image/edit.png}" id="addressEdit">
+                                </a>
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p>
+                                <b>Email:</b>
+                                <span>
+                                	<input type="text" id="emailText" th:field="*{email}" disabled>
+                                </span>
+                                <a class="edit"><img th:src="@{/image/edit.png}" id="emailEdit"></a>
+                            </p>
+                        </div>
+    
+                        <div class="one">
+                            <p>
+                                <b>Phone:</b>
+                                <span>
+                            		<input type="text" id="phoneText" th:field="*{phone}" disabled>
+                            	</span>
+                                <a class="edit">
+                                	<img th:src="@{/image/edit.png}" id="phoneEdit">
+                                </a>
+                            </p>
+                        </div>
+                        
+                        <div class="bootbtn">
+                            <input type="button" class="btn btn-success" id="next" value="Next">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            $(document).ready(function(){
+                $('#dropdown-list').removeClass("d-none");
+            });
+                        
+            // Dynamic add select's options
+            $(document).ready(function(){
+                var dateObj = new Date();
+                var current_year = dateObj.getFullYear();
+                var end_year = dateObj.getFullYear() + 1;
+                var current_month = dateObj.getMonth()+1;  // because January is 0
+                var obj=document.getElementById('eq_num');
+                 
+                $('#eq_num').empty();
+                for(var i = current_year; i <= end_year; i++)
+                {
+                   for (var j = 1; j <= 12; j++)
+                   {
+                       if(j == current_month && i == current_year)
+                       {
+                            if(j<10){
+                                obj.options.add(new Option(i+"-"+j,i+"-0"+j),true);
+                            }else{
+                                obj.options.add(new Option(i+"-"+j,i+"-"+j),true);
+                            }
+                            continue;
+                       }
+                       if(j > current_month && i == current_year)
+                       {
+                           if(j<10){
+                                obj.options.add(new Option(i+"-"+j,i+"-0"+j));
+                           }else{
+                                obj.options.add(new Option(i+"-"+j,i+"-"+j));
+                           }
+                           continue;
+                       }
+                       if(i == end_year)
+                       {
+                            if(j<10){
+                                obj.options.add(new Option(i+"-"+j,i+"-0"+j));
+                            }else{
+                                obj.options.add(new Option(i+"-"+j,i+"-"+j));
+                            }
+                            continue;
+                       }
+                   }
+                }
+                
+                //  Set select current Month
+                $(obj).find("option").each(function(){
+                    if ($(this).val() === current_year+"-"+(current_month))
+                    {
+                        $(this).attr("selected",true)
+                    }
+                });
+            });
+            
+            $(document).ready(function(){
+                $('#next').click(function(){
+                    cocForm.submit();
+                });
+            });
+            
+        </script>
+    </body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <title>Title</title>
+    <link rel="stylesheet" href="../css/confirm.css">
+    <script src="../js/jquery1.8.3.min.js"></script>
+    <script src="../js/jquery.signaturepad.js"></script>
+    <script src="../js/flashcanvas.js"></script>
+    <script src="../js/json2.js"></script>
+    <script src="../js/credit.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+      <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+   <!-- Popper JS -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+   
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a href="" class="logo"><img src="../image/logo.png"></a>
+    
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent" style="margin-left:60px;">
+            <div class="dropdown">
+                <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    All Applications
+                </a>
+              
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" href="#">Leave of Absence</a>
+                  <a class="dropdown-item" href="#">Withdrawal and Release</a>
+                  <a class="dropdown-item" href="#">Credit Transfer</a>
+                  <a class="dropdown-item" href="#">Change of Campus</a>
+                </div>
+              </div>
+    
+        <a href="logout.php"><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log Out</button></a>
+        
+    </div>
+    </nav>
+
+    <div class="bottom">
+        <Div class="">
+            <p class="rightTit">
+                Credit Transfer
+            </p>
+           
+            <Div class="rightcon">
+
+
+                <div class="one">
+                     <b>
+                         Welcome to Student Support Services!
+                     </b>
+
+
+                </div>
+        
+                <div class="one">
+                     <b>
+                         You are applying for Credit Transfer.
+                     </b>
+
+
+                </div>
+
+                <div class="three xieyi">
+                   
+                    <p style="width: 90%">
+                        <label for="tongyi">
+                            I, (student full name), authorise AIBTGlobal to retrieve my personal information and study record from my previous education provider, 
+                            (college name), in order to proceed my Credit Transfer application
+                        </label>
+                    </p>
+
+                    <br>
+                    <br>
+                    <br>
+                    <form method="post" action="" class="sigPad">
+                        <ul class="sigNav">
+                          <li class="drawIt"><a href="#draw-it" >Draw your signature</a></li>
+                          <li class="clearButton"><a href="#clear">Clear</a></li>
+                        </ul>
+                        <div class="sig sigWrapper">
+                          <div class="typed"></div>
+                          <canvas class="pad" width="198" height="55"></canvas>
+                          <input type="hidden" name="output" class="output">
+                        </div>
+                      </form>
+           
+
+
+                </div>
+                <div class="bootbtn">
+                    <a href="creditSubmitted.html" >
+                        <input type="button" class="btn btn-success" value="Submit">
+
+                    </a>
+                </div>
+
+
+                <div >
+            </Div>
+
+        </Div>
+    </div>
+
+ 
+    
+    
+      <script>
+        $(document).ready(function() {
+          $('.sigPad').signaturePad();
+        });
+      </script>
+     
+
+
+</body>
+</html>

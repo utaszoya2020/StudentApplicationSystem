@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="student/fragments :: headFragment">
+ <title>AIBTGlobal Student - Release or Withdraw</title>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <!-- Link to use icon-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/js/fileinput.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/themes/fas/theme.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+
+    <link rel="stylesheet" href="design.css">
+    <script src="common.js"></script>       
+    </head>
+    
+    <body>
+        <!--<nav th:replace="student/fragments :: navFragment"></nav>-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a href="" class="navbar-brand logo"><img src="logo.png"></a>
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarSupportedContent" style="">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown my-2 d-none" id="dropdown-list">
+                    <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        All Applications
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="/student/loa">Leave of Absence</a>
+                        <a class="dropdown-item disabled" href="#">Withdrawal and Release</a>
+                        <a class="dropdown-item" href="/student/ct">Credit Transfer</a>
+                        <a class="dropdown-item" href="/student/coc">Change of Campus</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-md-0" method="post" action="/logout"><input type="hidden" name="_csrf" value="75c638ce-65e2-4396-9959-521d5759fc8b"/>
+                <input type="hidden" name="redirect" value="/student/loa">
+                <button type="submit" class="btn btn-success my-2"><span>Log out</span></button>
+            </form>
+            
+        </div>
+    </nav>        
+        <div class="bottom" style="padding-bottom: 300px">
+            <div class="">
+                <p class="rightTit">Release or Withdraw</p>
+                
+                <div class="rightcon">
+
+
+            <div id="nonStudent"> 
+<form id="visitorInfo" action="success.html" >
+                <div class="one form-group">
+                  <p>
+                      <b>Comments*:</b>
+                      <input type="textarea" rows="3" id="comments" placeholder="Please provide your reasons of transfer" required pattern="^\s*(\S+\s+){20,}\S*$" oninvalid="this.setCustomValidity('Explain in at least 20 words')" oninput="setCustomValidity('')">
+                    <!--  <a class="edit">
+                        <!--<img src="../image/edit.png"required pattern="^\s*(\S+\s+){20,}\S*$" oninvalid="this.setCustomValidity('Explain in at least 20 words')" oninput="setCustomValidity('')" id="nameEdit">
+                    </a>-->
+
+                  </p>
+              </div><br>
+
+                <div class="form-group">
+                    <b>Letter of Offer (LOO)* :</b>
+                  <p>
+                      <a class="">
+                          <input type="file" value=" Add LOO" required="">
+                      </a>
+                  </p>
+              </div><br>
+
+                <div class="form-group">
+                    <b>Other supporting documents :</b>
+                  <p>
+                      <a class="">
+                          <input type="file" value=" Add LOO" placeholder="Desposit">
+                      </a>
+                  </p>
+              </div>
+                                           <div class=" d-flex justify-content-end">
+              <button type="submit" id="abc" class="btn btn-success mb-2" >Submit</button>
+                </div>
+                 </form>
+          </div>
+
+
+              <div id="student" style="display:none;">
+                <form action="cnfm.html">
+                <div class="one form-group">
+                  <p>
+                      <b>Comments*:</b>
+                      <input type="text" id="comments" placeholder="Please provide your reasons of transfer" required pattern="^\s*(\S+\s+){20,}\S*$" oninvalid="this.setCustomValidity('Explain in at least 20 words')" oninput="setCustomValidity('')">
+                      <a class="edit">
+                        <!--<img src="../image/edit.png" id="nameEdit">-->
+                    </a>
+
+                  </p>
+              </div><br>
+
+                <div class="form-group">
+                    <b>Flight ticket/visa grant or non-grant notice* :</b>
+                  <p>
+                      <a class="">
+                          <input type="file" value=" Add LOO" required="">
+                      </a>
+                  </p>
+              </div><br>
+
+                <div class="form-group">
+                    <b>Other supporting documents (relevant to the reasons pre-scribed):</b>
+                  <p>
+                      <a class="">
+                          <input type="file" value=" Add LOO" placeholder="Desposit">
+                      </a>
+                  </p>
+              </div>   
+                             <div class=" d-flex justify-content-end">
+              <button type="submit" id="abc" class="btn btn-success mb-2" >Submit</button>
+                </div>
+                 </form>
+           </div>
+
+
+     
+
+
+                </div>
+            </div>
+        </div>
+        
+        
+        <script>
+
+
+        function validate(){
+
+                    if($("#username").val()=="") { 
+                alert("Please enter username"); 
+                return false;
+            }    
+      
+            // check the name is empty (including only contains spaces) 
+        str1= document.getElementById("comments").value;
+        //exclude  start and end white-space
+        str1 = str1.replace(/(^\s*)|(\s*$)/gi,"");
+        //convert 2 or more spaces to 1  
+        str1 = str1.replace(/[ ]{2,}/gi," ");
+        // exclude newline with a start spacing  
+        str1 = str1.replace(/\n /,"\n");
+        if(str1.split(' ').length<20){
+            alert("Please explain your reasoning in at least 20 words");
+            return false;
+        }
+
+
+        }            
+
+
+
+
+        
+        </script>
+    </body>
+</html>        

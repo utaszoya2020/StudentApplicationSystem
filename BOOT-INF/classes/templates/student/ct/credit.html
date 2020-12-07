@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../css/credit.css" />
+
+
+         <!-- jQuery library -->
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+         <!-- Latest compiled and minified CSS -->
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+         <!-- Link to use icon-->
+         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+         <!-- Latest compiled JavaScript -->
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+         <!-- Popper JS -->
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <a href="" class="logo"><img src="../image/logo.png"></a>
+
+    <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent" style="margin-left:60px;">
+        <div class="dropdown">
+            <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                All Applications
+            </a>
+          
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item" href="#">Leave of Absence</a>
+              <a class="dropdown-item" href="#">Withdrawal and Release</a>
+              <a class="dropdown-item" href="#">Credit Transfer</a>
+              <a class="dropdown-item" href="#">Change of Campus</a>
+            </div>
+          </div>
+
+    <a href="logout.php"><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log Out</button></a>
+    
+</div>
+</nav>
+
+<center><h3>Credit Transfer</h3></center>
+<div class="warpper">
+    <input class="radio" id="one" name="group" type="radio" checked>
+    <input class="radio" id="two" name="group" type="radio">
+
+    <div class="tabs">
+    <label class="tab" id="one-tab" for="one">CT</label>
+    <label class="tab" id="two-tab" for="two">RPL</label>
+    </div>
+
+    <div class="panels">
+    <div class="panel" id="one-panel">
+      <div class="panel-title">What is CT
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#CTModal">
+            ?
+        </button>
+      </div>
+
+      <form id="visitorInfo" onsubmit="return visitorValidate();">
+         <div style="font-size:18px;">
+            Are you the student in AIBTGlobal？
+            <input type="radio" name="test" value="no">NO
+            <input type="radio" name="test" value="yes">Yes
+         </div> 
+         
+            <!-- for visitors -->
+            <div id="nonStudent" style="display:none;"> 
+
+                <div class="one">
+                  <p>
+                      <b>Name:</b><br>
+                      <input type="text" id="visitorName">
+                      <a class="edit">
+                        <img src="../image/edit.png" id="nameEdit">
+                    </a>
+
+                  </p>
+              </div>
+
+                <div class="one">
+                  <p>
+                      <b>Email:</b><br>
+                      <input type="email" id="visitorEmail">
+                      <a class="edit">
+                        <img src="../image/edit.png" id="emailEdit">
+                    </a>
+                  </p>
+              </div>
+
+                <div class="one">
+                  <p>
+                      <b>Phone:</b> <br>
+                      <input type="text" id="visitorPhone">
+                      <a class="edit">
+                        <img src="../image/edit.png" id="phoneEdit">
+                    </a>
+                  </p>
+              </div>
+
+                <div class="one">
+                  <p>
+                      <b>Address:</b><br>
+                      <input type="text" id="visitorAddress">
+                      <a class="edit">
+                        <img src="../image/edit.png" id="addressEdit">
+                    </a>
+                  </p>
+              </div>
+
+                <div class="form-group">
+                    <b>1. Upload Certificate (or SOA if was partial completion of a course)</b> <br>
+                    <b>2. Upload completion letter (if applicable)</b> <br>
+                    <b>3. Upload Transcript</b> <br>
+                    <Div style="text-align: center">
+                      <a class="shenjie">
+                          <p>
+                              +Add documents
+                          </p>
+                          <input type="file" value="">
+                      </a>
+      
+                  </Div>
+                </div> 
+
+                <div class="form-group">
+                    <label >Specify the program name of the certificate uploaded: </label>
+                    <input type="text" class="form-control" id="visitorProgramName">
+                </div>
+
+                <div class="form-group">
+                    <label >Specify the date when the program was completed: </label>
+                    <input type="date" class="form-control" id="visitorProgramDate">
+                </div>
+
+                <div class="form-group">
+                    <label >Specify the name of the RTO: </label>
+                    <input type="date" class="form-control" id="visitorRTO">
+                </div>
+                
+                <div class=" d-flex justify-content-end">
+                <button type="submit" class="btn btn-success mb-2">Submit</button>
+                </div>
+
+           </div>
+
+
+            <!-- for current Student -->
+            <div id="student" style="display:none;">Please log in</div>
+
+
+      </form>
+
+    </div>
+
+
+    <div class="panel" id="two-panel">
+      <div class="panel-title">What is RPL
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#RPLModal">
+              ?
+          </button>
+      </div>
+    <p>You will learn many aspects of styling web pages! You’ll be able to set up the correct file structure, edit text and colors, and create attractive layouts. With these skills, you’ll be able to customize the appearance of your web pages to suit your every need!</p>
+  </div>
+  </div>
+</div>
+
+
+
+
+
+
+  <!-- model to show the CT description -->
+  <div class="modal fade" id="CTModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Information about CT</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          description of CT
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- model to show the RPL description -->
+   <div class="modal fade" id="RPLModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Information about RPL</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          description of RPL
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+        <script>
+             // check if the visitor is current student or not
+        $(document).ready(function(){
+
+            $('#nonStudent').hide();
+            $('#student').hide();
+    $('input[name="test"]').click(function(){
+
+        var inputValue = $(this).attr("value");
+        if(inputValue=="no"){
+            $('#nonStudent').show();
+            $('#student').hide();
+        }else{
+            $('#nonStudent').hide();
+            $('#student').show(); 
+        }
+    });
+});
+
+
+
+function visitorValidate(){
+    // check the name is empty (including only contains spaces) 
+    if($("#visitorName").val().trim( )==""){
+        alert("Please enter your name.");
+        return false;
+    }
+
+    // Email should be in email format
+    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($(visitorEmail).val())))
+      {
+        alert("Please enter your valid email address")
+        return (false)
+      }
+
+        // check the phone is empty
+    if($("#visitorPhone").val().trim( )==""){
+        alert("Please enter your Phone Number.");
+        return false;
+    }
+
+       // check the address is empty
+       if($("#visitorPhone").val().trim( )==""){
+        alert("Please enter your Phone Number.");
+        return false;
+    }
+
+           // check the Certificate is empty
+        if($("#visitorPhone").val().trim( )==""){
+        alert("Please enter your Phone Number.");
+        return false;
+    }
+
+              // check the Transcript is empty
+        if($("#visitorPhone").val().trim( )==""){
+        alert("Please enter your Phone Number.");
+        return false;
+    }
+
+      // check the phone is empty
+      if($("#visitorPhone").val().trim( )==""){
+        alert("Please enter your Phone Number.");
+        return false;
+    }
+
+         // check the phone is empty
+         if($("#visitorPhone").val().trim( )==""){
+        alert("Please enter your Phone Number.");
+        return false;
+    }
+
+         // check the phone is empty
+         if($("#visitorPhone").val().trim( )==""){
+        alert("Please enter your Phone Number.");
+        return false;
+    }
+
+       
+    // Checkbox (Agree terms and conditions) is checked.
+
+    if(!$("#studentTerms").is(":checked")){
+        alert("You must agree to the terms and conditions.")
+        return (false)
+    }
+}
+        </script>
+
+
+
+
+</body>
+</html>

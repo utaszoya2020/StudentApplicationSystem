@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="staff/fragments :: headFragment">
+    <title id="pageTitle">AIBTGlobal Student - All Applications</title>
+    </head>
+    <body>
+
+    <nav th:replace="staff/fragments :: navFragment"></nav>
+
+    <div class="bottom">
+        <div class="Left">
+            <form style="margin-left:25px;" method="post" th:action="@{/staff/search}">
+                <div class="form-group row">
+                    <div class="col-8">
+                        <input type="text" class="form-control" placeholder="input search text" name="searchTicketNum" th:value="${session.searchTicketNum}">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                    <div class="col-8">
+                        <p>
+                            The search text will search for:<br>Ticket by <b>Ticket Number</b><br><b>Student ID</b> starts with '#'<br><b>Student Name</b> starts with '*'
+                        </p>
+                    </div>
+                </div>
+            </form>
+            <div class="searchresult">
+                
+               
+                <!-- Accordion Feature -->
+                <button class="accordion">Pending</button>
+                <div class="panel">
+                    <div class="resultlist" th:each="app : ${applicationList}" th:classappend="${(app.ticketNum==urlTicketNum ? 'active ' : '')+(app.status==T(au.edu.aibtglobal.util.Consts).STATUS_PENDING ? 'app_show' : 'app_hide')}" 
+                    	th:onclick="'window.location.href = \'' + @{/staff/ticket/{ticketNum}(ticketNum=${app.ticketNum})} + '\''">
+                        <!-- Status Check -->
+                        <div>
+                            <p>
+                                <b>Date:</b>[[${#dates.format(app.created, 'dd/MM/yyyy HH:mm')}]]
+                            </p>
+                            <p>
+                                <b>Subject:</b>[[${app.subject}]]
+                            </p>
+                            <p>
+                                <b>Status:</b>[[${app.status}]]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="accordion">Processing</button>
+                <div class="panel">
+                    <div class="resultlist" th:each="app : ${applicationList}" th:classappend="${(app.ticketNum==urlTicketNum ? 'active ' : '')+(app.status==T(au.edu.aibtglobal.util.Consts).STATUS_PROCESSING ? 'app_show' : 'app_hide')}"  
+                    	th:onclick="'window.location.href = \'' + @{/staff/ticket/{ticketNum}(ticketNum=${app.ticketNum})} + '\''">
+                        <!-- Status Check -->
+                        <div>
+                            <p>
+                                <b>Date:</b>[[${#dates.format(app.created, 'dd/MM/yyyy HH:mm')}]]
+                            </p>
+                            <p>
+                                <b>Subject:</b>[[${app.subject}]]
+                            </p>
+                            <p>
+                                <b>Status:</b>[[${app.status}]]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="accordion">Finalized</button>
+                <div class="panel">
+                    <div class="resultlist" th:each="app : ${applicationList}" th:classappend="${(app.ticketNum==urlTicketNum ? 'active ' : '')+(app.status==T(au.edu.aibtglobal.util.Consts).STATUS_FINALIZED ? 'app_show' : 'app_hide')}" 
+                    	th:onclick="'window.location.href = \'' + @{/staff/ticket/{ticketNum}(ticketNum=${app.ticketNum})} + '\''">
+                        <!-- Status Check -->
+                        <div>
+                            <p>
+                                <b>Date:</b>[[${#dates.format(app.created, 'dd/MM/yyyy HH:mm')}]]
+                            </p>
+                            <p>
+                                <b>Subject:</b>[[${app.subject}]]
+                            </p>
+                            <p>
+                                <b>Status:</b>[[${app.status}]]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="right">
+            <div th:if="${!#strings.isEmpty(urlTicketNum)}">
+                <p class="rightTit">[[${applicationObj.type}]]</p>
+
+                <!-- STATUS: INTERMEDIATE APPROVED -->
+                <div class="rightcon" th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED)}
+                	and ${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_PROCESSING)}">
+                    <div class="three">
+                        <p>
+                            <img th:src="@{/image/xiaolian.png}" class="xiaolian">
+                        </p>
+                        <p>
+                            The staff ([[${applicationObj.handledBy}]]) have approved the [[${applicationObj.type}]] application!<br>
+                            Now you need to do second action.<br>
+                            Thank you!
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- STATUS: FINAL APPROVED -->
+                <div class="rightcon" th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED)}
+                	and ${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_FINALIZED)}">
+                    <div class="three">
+                        <p>
+                            <img th:src="@{/image/xiaolian.png}" class="xiaolian">
+                        </p>
+                        <p>
+                            You have approved the [[${applicationObj.type}]] application!<br>
+                            The student will receive the notification soon.<br>
+                            Thank you!
+                        </p>
+                    </div>
+                </div>
+                
+
+                <!-- STATUS: REJECTED -->
+                <div class="rightcon" th:if="${#strings.equals(applicationObj.statusDesc, T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_REJECTED)}">
+                    <div class="three">
+                        <p>
+                            <img th:src="@{/image/wrong.png}" class="xiaolian">
+                        </p>
+                        <p>
+                            You have rejected the [[${applicationObj.type}]] application!<br>
+                            The student will receive the notification soon.<br>
+                            Thank you!
+                        </p>
+                    </div>
+                </div>
+    
+                <!-- LOA DETAILS AND ACTIONS -->
+                <div th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_LOA)} or ${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_DEFER)}">
+                    <div class="rightcon">
+                        <div class="one">
+                            <p>
+                                <b>TickedID:</b>[[${applicationObj.ticketNum}]]
+                            </p>
+                        </div>
+    
+                        <div class="two">
+                            <p>
+                                <b>Name:</b><span th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+                            </p>
+                            <p>
+                                <b>ID:</b>[[${userObj.id}]]
+                            </p>
+                        </div>
+                        <div class="two">
+                            <p>
+                                <b>Campus:</b>[[${userObj.campus}]]
+                            </p>
+                            <p>
+                                <b>Trainer:</b>[[${applicationObj.trainer}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Current course:</b>[[${course}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Address:</b>[[${userObj.address}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Email:</b>[[${userObj.email}]]
+                            </p>
+    
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Phone:</b>[[${userObj.phone}]]
+                            </p>
+    
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Leave of Absence Start Date:</b>
+                                <span id="start">
+                                [[${applicationObj.field_1}]]
+                            </span>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Leave of Absence End Date:</b>
+                                <span id="end">
+                                [[${applicationObj.field_2}]]
+                            </span>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Total weeks:</b>
+                                <span class="Totalw">
+                            </span>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Subject:</b>
+                                <span>
+                                [[${applicationObj.subject}]]
+                            </span>
+                            </p>
+    
+                        </div>
+                        <div class="three">
+                            <p>
+                                <b>Content:</b>
+                            </p>
+                            <p>
+                                [[${applicationObj.content}]]
+                            </p>
+    
+                        </div>
+                        <div class="three">
+                            <p>
+                                <b>Attachment:</b>
+                            </p>
+                            <div class="links" th:each="doc : ${documentlist}">
+								<a target="_blank"
+									th:href="@{/staff/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+                        </div>
+                    </div>
+
+                    <div th:unless="(${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_FINALIZED)}) 
+                        or (not ${#strings.contains(staffObj.campus, userObj.campus)}) 
+                        or (not ${#strings.contains(applicationObj.assignTo, staffObj.roles)})
+                        or ((
+                            (${#strings.equals(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_COURSE_COORDINATOR)}) 
+                            or (${#strings.equals(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_HEAD_OF_SCHOOL)})
+                            ) and (not ${#strings.contains(staffObj.school, userObj.school)}))
+                        ">
+                        <div class="btngroup">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-more">Request more documents</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-approve">Approve</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-reject">Reject</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COC DETAILS AND ACTIONS -->
+                <div th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_COC)}">
+                    <div class="rightcon">
+                        <div class="one">
+                            <p>
+                                <b>TickedID:</b>[[${applicationObj.ticketNum}]]
+                            </p>
+                        </div>
+                        <div class="two">
+                            <p>
+                                <b>Name:</b><span th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+                            </p>
+                            <p>
+                                <b>ID:</b>[[${userObj.id}]]
+                            </p>
+                        </div>
+                        <div class="two">
+                            <p>
+                                <b>Campus:</b>[[${userObj.campus}]]
+                            </p>
+                            <p>
+                                <b>Change to Campus:</b>[[${applicationObj.field_1}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Intake Month:</b>[[${applicationObj.field_2}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Traniner:</b>[[${applicationObj.trainer}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Current course:</b><span th:text="${course}"></span>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Address:</b>[[${userObj.address}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Email:</b>[[${userObj.email}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Phone:</b>[[${userObj.phone}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Subject:</b>
+                                <span>
+                                    [[${applicationObj.subject}]]
+                                </span>
+                            </p>
+                        </div>
+                        <div class="three">
+                            <p>
+                                <b>Content:</b>
+                            </p>
+                            <p>
+                                [[${applicationObj.content}]]
+                            </p>
+                        </div>
+                        <div class="three">
+                            <p>
+                                <b>Attachment:</b>
+                            </p>
+                            <div class="links" th:each="doc : ${documentlist}">
+								<a target="_blank"
+									th:href="@{/staff/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+                        </div>
+                    </div>
+                    <div class="rightcon">
+						<div class="three">
+							<p>
+								<b>Staff Attachment:</b>
+							</p>
+							<div class="links">
+								<a target="_blank" th:each="element : ${staffdocuments}"
+									th:href="@{/staff/downloadFile/{url}(url=${element.value})}"><img
+									th:src="@{/image/qubiezhen.png}">[[${element.key}]]</a>
+							</div>
+						</div>
+					</div>
+			
+
+                    <div th:unless="(${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_FINALIZED)}) 
+                        or (not ${#strings.contains(staffObj.campus, applicationObj.field_1)})
+                        or (not ${#strings.contains(applicationObj.assignTo, staffObj.roles)})
+                        or ((
+                            (${#strings.equals(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_COURSE_COORDINATOR)}) 
+                            or (${#strings.equals(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_HEAD_OF_SCHOOL)})
+                            ) and (not ${#strings.contains(staffObj.school, userObj.school)}))
+                        ">
+                        <div class="btngroup">
+                           	<button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-more" 
+                            		th:if="(${#strings.contains(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_STUDENT_SUPPORT_TEAM)})">
+                            		Request more documents
+                       		</button>
+                       		<button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-approve"
+                       		th:if="(${#strings.contains(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_STUDENT_SUPPORT_TEAM)})">
+                       		Approve
+                       		</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-approvecoc"
+                            th:unless="(${#strings.contains(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_STUDENT_SUPPORT_TEAM)})">
+                            Approve
+                            </button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-reject">Reject</button>
+                        </div>
+                    </div>
+                </div>
+
+				<!-- RANDW DETAILS AND ACTIONS -->
+				<div th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_RandW)}">
+					<div class="rightcon">
+						<div class="one">
+							<p>
+								<b>TickedID:</b>[[${applicationObj.ticketNum}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Name:</b><span
+									th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+							</p>
+							<p>
+								<b>ID:</b>[[${userObj.id}]]
+							</p>
+						</div>
+						<div class="two">
+							<p>
+								<b>Campus:</b>[[${userObj.campus}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Traniner:</b>[[${applicationObj.trainer}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Current course:</b><span th:text="${course}"></span>
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Address:</b>[[${userObj.address}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Email:</b>[[${userObj.email}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Phone:</b>[[${userObj.phone}]]
+							</p>
+						</div>
+						<div class="one">
+							<p>
+								<b>Subject:</b> <span> [[${applicationObj.subject}]] </span>
+							</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Content:</b>
+							</p>
+							<p>[[${applicationObj.content}]]</p>
+						</div>
+						<div class="three">
+							<p>
+								<b>Attachment:</b>
+							</p>
+							<div class="links" th:each="doc : ${documentlist}">
+								<a target="_blank"
+									th:href="@{/staff/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+						</div>
+					</div>
+					<div class="rightcon">
+							<div class="three">
+								<p>
+									<b>Staff Attachment:</b>
+								</p>
+								<div class="links" th:each="doc : ${staffdocumentlist}">
+									<a target="_blank"
+										th:href="@{/staff/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+										<img th:src="@{/image/qubiezhen.png}">
+										[[${doc.fileName}]]
+									</a>
+									<p>Uploaded on [[${doc.uploadedOn}]]</p>
+								</div>
+							</div>
+						</div>
+
+					<div th:unless="(${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_FINALIZED)}) 
+                        or (not ${#strings.contains(staffObj.campus, userObj.campus)}) 
+                        or (not ${#strings.contains(applicationObj.assignTo, staffObj.roles)})
+                        or ((
+                            (${#strings.equals(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_COURSE_COORDINATOR)}) 
+                            or (${#strings.equals(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_HEAD_OF_SCHOOL)})
+                            ) and (not ${#strings.contains(staffObj.school, userObj.school)}))
+                        ">
+                        <div class="btngroup">
+                           	<button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-more">Request more documents</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-approverandw">Approve</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-reject">Reject</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- COQ DETAILS AND ACTIONS -->
+				<div th:if="${#strings.equals(applicationObj.type, T(au.edu.aibtglobal.util.Consts).TYPE_COQ)}">
+                    <div class="rightcon">
+                        <div class="one">
+                            <p>
+                                <b>TickedID:</b>[[${applicationObj.ticketNum}]]
+                            </p>
+                        </div>
+                        <div class="two">
+                            <p>
+                                <b>Name:</b><span th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+                            </p>
+                            <p>
+                                <b>ID:</b>[[${userObj.id}]]
+                            </p>
+                        </div>
+                        <div class="two">
+                            <p>
+                                <b>Campus:</b>[[${userObj.campus}]]
+                            </p>
+                            
+                        </div>
+                       <div class="one">
+                       <p>
+                                <b>Courses need to change:</b>
+                                 <span th:utext="${#strings.replace(applicationObj.originalCourses, ',','<br/>')}"></span>
+                                
+                            </p>
+                       </div>
+                        <div class="one">
+                            <p>
+                                <b>Courses intent to change:</b>
+                                 <span th:utext="${#strings.replace(applicationObj.changedCourses, ',','<br/>')}"></span>
+                            
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Traniner:</b>[[${applicationObj.trainer}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Current course:</b><span th:text="${course}"></span>
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Address:</b>[[${userObj.address}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Email:</b>[[${userObj.email}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Phone:</b>[[${userObj.phone}]]
+                            </p>
+                        </div>
+                        <div class="one">
+                            <p>
+                                <b>Subject:</b>
+                                <span>
+                                    [[${applicationObj.subject}]]
+                                </span>
+                            </p>
+                        </div>
+                        <div class="three">
+                            <p>
+                                <b>Content:</b>
+                            </p>
+                            <p>
+                                [[${applicationObj.content}]]
+                            </p>
+                        </div>
+                        <div class="three">
+                            <p>
+                                <b>Attachment:</b>
+                            </p>
+                            <div class="links" th:each="doc : ${documentlist}">
+								<a target="_blank"
+									th:href="@{/staff/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+									<img th:src="@{/image/qubiezhen.png}">
+									[[${doc.fileName}]]
+								</a>
+								<p>Uploaded on [[${doc.uploadedOn}]]</p>
+							</div>
+                        </div>
+                        
+                    </div>
+					<!-- Delete log in COQ as global log added for all applications-->
+                    <div class="rightcon">
+							<div class="three">
+								<p>
+									<b>Staff Attachment:</b>
+								</p>
+								<div class="links" th:each="doc : ${staffdocumentlist}">
+									<a target="_blank"
+										th:href="@{/staff/downloadFile/{ticketNum}/{url}(ticketNum=${applicationObj.ticketNum},url=${doc.url})}">
+										<img th:src="@{/image/qubiezhen.png}">
+										[[${doc.fileName}]]
+									</a>
+									<p>Uploaded on [[${doc.uploadedOn}]]</p>
+								</div>
+							</div>
+					</div>
+
+                    <div th:unless="(${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_FINALIZED)}) 
+                        or (not ${#strings.contains(staffObj.campus, userObj.campus)}) 
+                        or (not ${#strings.contains(applicationObj.assignTo, staffObj.roles)})">
+                        <div class="btngroup">
+                           	<button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-more"
+                           	        th:if="(${#strings.contains(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_COURSE_AO)})">Request more documents</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-approve"
+                                    th:if="(${#strings.contains(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_COURSE_AO)})
+                                    and (${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_PENDING)})">Approve</button>
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-approve"
+                                    th:if="(${#strings.contains(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_COURSE_AO)})
+                                    and (${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_PROCESSING)})">Approve</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-approvecoqao"
+                                    th:if="(${#strings.contains(staffObj.roles, T(au.edu.aibtglobal.util.Consts).ROLE_STUDENT_SUPPORT_TEAM)})
+                                    and (${#strings.equals(applicationObj.status, T(au.edu.aibtglobal.util.Consts).STATUS_PROCESSING)})">Approve</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-reject">Reject</button>
+                            
+                        </div>
+                    </div>
+                </div>
+				<!--Staff can view history--> 	
+				<!-- Change layout format -->
+				<div class="rightcon" th:if="${logs != null}">
+					<div class="three" th:each="log : ${logs}">
+						<p>
+							<b>[[${log.fullName}]]([[${log.createdBy}]])</b>
+							[[${#dates.format(log.created, 'dd/MM/yyyy HH:mm')}]]
+						</p>
+						<p>[[${log.subject}]]</p>
+						<p>[[${log.content}]]</p>
+					</div>
+				</div>						
+                <!-- HIDDEN DIALOGS-->
+                <!-- REQUIRE MORE DIALOG -->
+                <div class="modal fade modal-more" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Request more documents</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form class="needs-validation" method="post" th:action="${#httpServletRequest.requestURI}" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <p>Please advise the student the documents that they need to attach.</p>
+                                    <textarea class="form-control" name="comment" rows="8" required></textarea>
+                                    <div class="file-loading-hidden">
+											<input id="input-files2" type="file"
+												name="file">
+										</div>
+                                    <input type="hidden" name="changeTo" th:value="${T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_PENDING_DOCUMENT}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Confirm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- APPROVE DIALOG -->
+                <div class="modal fade modal-approve" id="sigDiag" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Approve</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id="noSig">
+                                        <b>Please upload your signature below:</b>
+                                        <br>
+                                        <canvas id="pad1" width="300" height="100" style="border: 5px solid #218838;"></canvas>
+                                        <br>
+                                        <button id="clear-signature">Clear</button>
+                                        <button id="upload-signature">Upload</button>
+                                    </div>
+                                    <div id="yesSig">
+                                        <b>You've had signature already. Do you want to update your signature? </b>
+                                        <button id="positive">Yes</button>
+                                        <button id="negative">No</button>
+                                        <div id="updateSig" class="d-none">
+                                            <br>
+                                            <canvas id="pad2" width="300" height="100" style="border: 5px solid #218838;"></canvas><br>
+                                            <button id="clear-signature2">Clear</button>
+                                            <button id="upload-signature2">Upload</button>
+                                        </div>
+                                    </div>
+                            <form method="post" th:action="${#httpServletRequest.requestURI}" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <p>Please leave the comment.</p>
+                                    <textarea class="form-control" name="comment" rows="8"></textarea>
+
+                                    <div class="file-loading-hidden">
+                                        <input id="input-files2" type="file" name="file">
+                                    </div>
+                                    
+                                    
+                                    <input type="hidden" name="changeTo" th:value="${T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Confirm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- COQ AO approve -->
+                  <div class="modal fade modal-approvecoqao" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Approve</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                             <form method="post" th:action="${#httpServletRequest.requestURI}" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <p>Please leave the comment.</p>
+                                    <textarea class="form-control" name="comment" rows="8"></textarea>
+                                    <input type="hidden" name="changeTo" th:value="${T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED}">
+								<div class="tijiaoconlist">
+									<p class="tijiaoconlistL">Attachment:</p>
+									<p class="tijiaoconlistR">
+										Supporting documents <br>
+										• new COE <br> • Others<br>
+									</p>
+								</div>
+                               <div class="form-group">
+								<div class="tijiaoconlist" style="line-height: 1.5;">
+									<div class="">
+										<div class="file-loading">
+											<input id="input-files1" type="file"
+												name="file">
+										</div>
+									</div>
+								</div>
+							</div>
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Confirm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- RnadW Modal approve-->
+                <div class="modal fade modal-approverandw" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Approve</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="post" th:action="${#httpServletRequest.requestURI}" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <p>Please leave the comment.</p>
+                                    <textarea class="form-control" name="comment" rows="8"></textarea>
+                                    <input type="hidden" name="changeTo" th:value="${T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED}">
+								<div class="tijiaoconlist">
+									<p class="tijiaoconlistL">Attachment:</p>
+									<p class="tijiaoconlistR">
+										Supporting documents <br>
+										• COE termination<br> • Release approval<br>
+									</p>
+								</div>
+                               <div class="form-group">
+								<div class="tijiaoconlist" style="line-height: 1.5;">
+									<div class="">
+										<div class="file-loading">
+											<input id="input-files1" type="file"
+												name="file">
+										</div>
+									</div>
+								</div>
+							</div>
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Confirm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- COC MODAL DIALOG APPROVE-->
+                <div class="modal fade modal-approvecoc" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Approve</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="post" th:action="${#httpServletRequest.requestURI}" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <p>Please leave the comment.</p>
+                                    <textarea class="form-control" name="comment" rows="8"></textarea>
+                                    <input type="hidden" name="changeTo" th:value="${T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_APPROVED}">
+								    <div class="tijiaoconlist">
+									<p class="tijiaoconlistL">Attachment:</p>
+									<p class="tijiaoconlistR">
+										Supporting documents <br>
+										• Timetable<br>
+									</p>
+								    </div>
+                                    <div class="form-group">
+								    <div class="tijiaoconlist" style="line-height: 1.5;">
+									    <div class="">
+										    <div class="file-loading">
+											    <input id="input-files" type="file" name="file">
+										    </div>
+									    </div>
+								    </div>
+							        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Confirm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- REGECT DIALOG -->   
+                <div class="modal fade modal-reject" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Reject</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form class="needs-validation" method="post" th:action="${#httpServletRequest.requestURI}" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <p>Please advise the student reason of rejection.</p>
+                                    <textarea class="form-control" name="comment" rows="8" required></textarea>
+                                    <div class="file-loading-hidden">
+										<input id="input-files2" type="file" name="file">
+									</div>
+                                    <input type="hidden" name="changeTo" th:value="${T(au.edu.aibtglobal.util.Consts).STATUS_DESCRIPTION_REJECTED}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Confirm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+ 	   	var signaturePad_1;
+ 	   	var signaturePad_2;
+ 	   
+        $(document).ready(function(){
+        
+            if ($("#start").text().trim() != '') {
+                $('.Totalw').text(getDays($("#start").text().trim(),
+                    $("#end").text().trim()).toFixed(1));
+            }
+                $("#input-files1").fileinput({
+                    theme: "fas",
+                    browseClass: "btn btn-primary btn-block",
+                    showCaption: false,
+                    showRemove: false,
+                    showUpload: false,
+                    allowedFileExtensions: ["jpg", "jpeg", "gif", "png", "pdf"],
+                    maxFileCount: 10,
+                    maxFileSize: 51200,
+                    previewFileType: "any"
+                });
+                $("#input-files2").fileinput({
+                    theme: "fas",
+                    browseClass: "btn btn-primary btn-block",
+                    showCaption: false,
+                    showRemove: false,
+                    showUpload: false,
+                    allowedFileExtensions: ["jpg", "jpeg", "gif", "png", "pdf"],
+                    maxFileCount: 10,
+                    maxFileSize: 51200,
+                    previewFileType: "any"
+                });         
+        });
+        
+        
+        var acc = document.getElementsByClassName("accordion");
+        for (var i = 0; i < acc.length; i++)
+        {
+            acc[i].addEventListener("click", function(){
+                /* Toggle between adding and removing the "active" class, to highlight the button that controls the panel */
+                this.classList.toggle("active");
+                
+                /* Toggle between hiding and showing the active panel */
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block")
+                {
+                    panel.style.display = "none";
+                }
+                else
+                {
+                    panel.style.display = "block";
+                }
+            });
+        }
+        
+        
+        // When dialog shows
+        $( "#sigDiag" ).on('shown.bs.modal', function(){
+            // Check signature
+                var sig = [[${session.Signature}]];
+                if(sig == 0)
+                {
+                	$('#noSig').removeClass('d-none');
+                    signaturePad_1 = new SignaturePad($('#pad1').get(0));
+                    $('#yesSig').addClass('d-none');
+                }
+                else
+                {
+                    $('#yesSig').removeClass('d-none');
+                    $('#noSig').addClass('d-none');
+                }
+                //
+                $('#positive').on('click',function(){
+                    signaturePad_2 = new SignaturePad($('#pad2').get(0));
+                	$('#updateSig').removeClass('d-none');
+                });
+                $('#negative').on('click',function(){
+                	$('#updateSig').addClass('d-none');
+                });
+                
+               
+                // for signature
+                function dataURLToBlob(dataURL){
+                	var parts = dataURL.split(';base64,');
+                	var contentType = parts[0].split(":")[1];
+                	var raw = window.atob(parts[1]);
+                	var rawLength = raw.length;
+                	var uInt8Array = new Uint8Array(rawLength);
+                	
+                	for(var i=0; i<rawLength; ++i){
+                		uInt8Array[i] = raw.charCodeAt(i);
+                	}
+                	return new Blob([uInt8Array], { type: contentType });
+                }
+            
+                $('#clear-signature').on('click',function(){
+                    signaturePad_1.clear();
+                });
+                $('#clear-signature2').on('click',function(){
+                    signaturePad_2.clear();
+                });
+
+                $('#upload-signature').on('click',function(){
+                    if(signaturePad_1.isEmpty()){
+                		alert("Please provide a signature first.")
+                	}else{
+                		var token = $("meta[name='_csrf']").attr("content");
+                        console.log('token is:'+token);
+                        var dataURL=signaturePad_1.toDataURL();
+                        var parts = dataURL.split(';base64,');
+                        var raw = parts[1];
+                       // requestData[_csrf_param_name] = _csrf_token; // Adds the token
+
+                        $.ajax({
+	                        url: "/staff/uploadSignature",
+    	                    headers: {"X-CSRF-TOKEN": token}, //send CSRF token in header
+        	                method: "post",
+            	            //data: raw,
+                	        data:JSON.stringify({"signature":raw}),
+                    	    contentType: "application/json",
+                        	success: function(data) {
+                            	if (data == "success") {
+                               		alert("success");
+                            	}
+                            	else if(data == "failure"){
+                                	alert("file already exist!");
+                            	}
+                        	},
+                        	error: function(data) {
+                            	alert("something wrong!");
+                        	}
+                        });
+                    }
+                });
+                
+                $('#upload-signature2').on('click',function(){
+                    if(signaturePad_2.isEmpty()){
+                		alert("Please provide a signature first.")
+                	}else{
+                        var token = $("meta[name='_csrf']").attr("content");
+                        console.log('token is:'+token);
+                        
+                        var dataURL=signaturePad_2.toDataURL();
+                        var parts = dataURL.split(';base64,');
+                        var raw = parts[1];
+                       // requestData[_csrf_param_name] = _csrf_token; // Adds the token
+
+                        $.ajax({
+                        url: "/staff/uploadSignature",
+                        headers: {"X-CSRF-TOKEN": token}, //send CSRF token in header
+                        method: "post",
+                        //data: raw,
+                        data:JSON.stringify({"signature":raw}),
+                        contentType: "application/json",
+
+                        success: function(data) {
+                            if (data == "success") {
+                               alert("success");
+                            }
+                            else if(data == "failure"){
+                                alert("file already exist!");
+                            }
+                        },
+                        error: function(data) {
+                            alert("something wrong!");
+                        }
+                        });
+                    }
+                });
+        });
+        
+    </script>
+    </body>
+</html>

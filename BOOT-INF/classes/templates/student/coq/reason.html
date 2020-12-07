@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="student/fragments :: headFragment">
+        <title id="pageTitle">AIBTGlobal Student - Change Qualification</title>
+    </head>
+    
+    <body>
+        <nav th:replace="student/fragments :: navFragment"></nav>
+        
+        <div class="bottom">
+            
+            <div class="container rightcon">
+                <p class="rightTit" id="deferTitle" start="">Change Qualification</p>
+           
+             <form class="needs-validation" id="coqForm"  method="post" th:action="${#httpServletRequest.requestURI}" th:object="${coQApplication}" enctype="multipart/form-data">
+                                    
+                    <div class="tijiaocon">
+                        
+
+                        <div class="tijiaoconlist">
+                            <p class="tijiaoconlistL">
+                                Subject:
+                            </p>
+                            
+                            <p class="tijiaoconlistR">
+                                <select class="issureselect">
+                                    <option value="1">
+                                        Family Issue
+                                    </option>
+                                    <option value="2">
+                                        Medical Issue
+                                    </option>
+                                    <option value="3">
+                                        Personal Issue
+                                    </option>
+                                    <option value="4">
+                                        Academic Issue
+                                    </option>
+                                    <option value="5">
+                                        Others
+                                    </option>
+                                </select>
+                            </p>
+                        </div>
+                        
+                        <div class="tijiaoconlist issure">
+                            <p class="tijiaoconlistL">
+                                Others:
+                            </p>
+                            <p class="tijiaoconlistR">
+                                <input type="text" id="subject" th:field="*{subject}" class="form-control" required>
+                            </p>
+                        </div>
+                        
+                        <div class="tijiaoconlist">
+                            <p class="tijiaoconlistL">
+                                Content:
+                            </p>
+                            <p class="tijiaoconlistR">
+                                <textarea th:field="*{content}" class="form-control" 
+                                placeholder="Please provide your reasons of change qualification in at least 20 words"
+								required pattern="^\s*(\S+\s+){20,}\S*$"
+								oninvalid="this.setCustomValidity('Explain in at least 20 words')"
+								oninput="setCustomValidity('')"></textarea>
+                            </p>
+                        </div>
+                        
+                        <div class="tijiaoconlist">
+                            <p class="tijiaoconlistL">
+                                Attachment:
+                            </p>
+                            <p class="tijiaoconlistR">
+                                Supporting evidence includes documentation such as<br>
+                                • Medical certificates;<br>
+                                • Flight itinerary; or<br>
+                                • Affidavit<br>
+                                • Court Order<br>
+                                • Written directive(s) issued by governmental body(ies)<br>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="tijiaoconlist" style="line-height: 1.5;">
+                        <div class="tijiaoconlistR">
+                            <div class="file-loading">
+                                <input id="input-files" type="file" th:field="*{multipartFilesDocument}" multiple>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bootbtn">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                    
+                    <input type="hidden" id="changedCourses" th:field="*{changedCourses}" >
+                    <input type="hidden"  id="originalCourses" th:field="*{originalCourses}">
+                    <input type="hidden"  th:field="*{intakeMonth}">
+                 
+                  
+             </form>    
+           </div>
+             
+       </div>
+        
+        
+        <script>
+            $(document).ready(function(){
+                $('#dropdown-list').removeClass("d-none");
+            });
+            
+            $('.issureselect').change(function(){
+                if($(this).val()==5){
+                    $("#subject").val("");
+                    $('.issure').show();
+                }
+                else{
+                    $("#subject").val($('.issureselect option:selected').text().trim());
+                    $('.issure').hide();
+                }
+            });
+            
+            $(document).ready(function(){
+                $("#subject").val($('.issureselect option:selected').text().trim());
+                
+                /*
+                // with plugin options
+                // Annotated by Dahoo on 19-08-2020: I donnot know why this is removed in newer version.
+                $("#input-files").fileinput({
+                    theme: "fas",
+                    browseClass: "btn btn-primary btn-block",
+                    showCaption: false,
+                    showRemove: false,
+                    showUpload: false,
+                    allowedFileExtensions: ["jpg", "jpeg", "gif", "png", "pdf"],
+                    maxFileCount: 10,
+                    maxFileSize: 5120,
+                    previewFileType: "any"
+                });
+                */
+            });
+            
+            function count_words(){
+        		str1= document.getElementById("comments").value;
+        		if(str1.split(' ').length<20){
+        			console.log(str1.split(' ').length);
+            		alert("Please explain your reasoning in at least 20 words");
+            	
+            		return false;
+        		}else{
+        			return true;
+        		}
+        	}         
+        </script>
+    </body>
+</html>

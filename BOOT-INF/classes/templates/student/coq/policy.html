@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:insert="student/fragments :: headFragment">
+<title id="pageTitle">AIBTGlobal Student - Change Qualification</title>
+</head>
+
+<body>
+	<nav th:replace="student/fragments :: navFragment"></nav>
+
+	<div class="bottom">
+
+		<div class="container rightcon">
+			<p class="rightTit" id="deferTitle" start="">Change Qualification</p>
+
+			<form class="needs-validation" id="coqForm" method="post"
+				th:action="${#httpServletRequest.requestURI}"
+				th:object="${coQApplication}" enctype="multipart/form-data">
+
+				<div class="three xieyi">
+					<p style="width: 20px">
+						<b style="display: inline-block"><input type="checkbox"
+							id="tongyi" name="tongyi" value="yes"></b>
+					</p>
+
+					<p style="width: 90%">
+						<label for="tongyi">I agree the below agreement <br> *Course fees policy for change of
+							course - offshore students has been released, effective as of 15
+							September 2017. <br>• Please note that Change of Qualification
+							process may take up to 1 month. <br> • Student Support department will
+							review your application and inform Finance team to prepare a new
+							payment plan.  <br>• Finance team will send you the new payment plan
+							via student email within 10 business days ofapproval.  <br>• Course
+							change process will be terminated if student does not sign the
+							new payment plan and return it within 7 days after it is sent. If
+							the date is elapsed, student will be required to resubmit the
+							application and $500 admin fee will apply.  <br>• Until Change of
+							Qualification is approved and processed, the student must remain
+							in current course and attend all classes as usual as attendance
+							will still be calculated.  <br>• For offshore students who wish to
+							change their course within the first 6 months of studycommencing:
+							<br> Offshore price will be used when calculating the new course
+							fees. <br> If a student changes course after 6 months, then onshore
+							price will apply on the newcourse.  <br>• A partial refund will be
+							calculated and offset against the new course fees. <br> • No financial
+							penalty will be charged for the first change.  <br>• $500 admin charge
+							will apply for each course change thereafter. </label>
+					</p>
+				</div>
+				<div class="bootbtn d-none">
+					<input type="button" class="btn btn-success" id="coq_next"
+						value="Next">
+				</div>
+
+				<input type="hidden" id="changedCourses"
+					th:field="*{changedCourses}"> <input type="hidden"
+					id="originalCourses" th:field="*{originalCourses}"> <input
+					type="hidden" th:field="*{intakeMonth}">
+
+
+			</form>
+		</div>
+
+	</div>
+
+
+	<script>
+            $(document).ready(function(){
+                $('#dropdown-list').removeClass("d-none");
+            });
+            
+            $('.issureselect').change(function(){
+                if($(this).val()==5){
+                    $("#subject").val("");
+                    $('.issure').show();
+                }
+                else{
+                    $("#subject").val($('.issureselect option:selected').text().trim());
+                    $('.issure').hide();
+                }
+            });
+            
+            $(document).ready(function(){
+            	 
+                  $('input[name="tongyi"]').click(function(){
+                    if(this.checked)
+                        $('.bootbtn').removeClass('d-none');
+                    else
+                        $('.bootbtn').addClass('d-none');
+                  });
+            	
+            	  $('#coq_next').click(function(){
+            		  coqForm.submit();
+            	  });
+            	  
+            });
+            
+            function count_words(){
+        		str1= document.getElementById("comments").value;
+        		if(str1.split(' ').length<20){
+        			console.log(str1.split(' ').length);
+            		alert("Please explain your reasoning in at least 20 words");
+            	
+            		return false;
+        		}else{
+        			return true;
+        		}
+        	}         
+        </script>
+</body>
+</html>

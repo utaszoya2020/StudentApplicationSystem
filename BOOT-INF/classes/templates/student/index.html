@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:insert="student/fragments :: headFragment">
+    <title id="pageTitle">AIBTGlobal Student</title>
+</head>
+<body>
+
+    <nav th:replace="student/fragments :: navFragment"></nav>
+
+    <div class="bottom">
+        <div class="">
+            <div class="rightcon">
+                
+                <div class="one">
+                    <b>Welcome to Student Support Services!</b><br>
+                    <b>Please login first to use our services</b>
+                </div>
+<!--
+                <div class="one">
+                     <b>
+                         Please choose one of the services from the combo box above.
+                     </b>
+                </div>
+                <div class="one">
+                     <b>
+                         You can apply for Leave of Absence, Withdrawal and Release, Change of Campus, Change of Qualification, Credit Transfer.
+                     </b>
+
+
+                </div>
+
+                <div class="three xieyi">
+                    <p style="width: 20px">
+                        <b style="display: inline-block"><input type="checkbox" id="tongyi" name="tongyi" value="yes"></b>
+                    </p>
+                    <p style="width: 90%">
+                        <label for="tongyi">
+                            I have read all the content above, and I’m awared that all the documents I submit
+                            should be real, any fake documents or lies might cause the delay or reject of my
+                            application.
+
+                        </label>
+                    </p>
+
+                </div>
+                <div class="bootbtn">
+                    <a href="/student/home" class="inbtn" >
+                        <input type="button" class="btn btn-success" value="Next">
+
+                    </a>
+                </div>
+-->
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+             //Alert wrong user
+             $(document).ready(function(){
+            	var url = window.location.search;
+            	var urlParams = new URLSearchParams(url)
+            	var Msg = urlParams.get('Msg');
+            	if(Msg){
+            		alert("Username or Password wrong!");
+            	}
+            
+            });
+
+    </script>
+
+</body>
+</html>

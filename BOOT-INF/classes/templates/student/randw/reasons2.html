@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:insert="student/fragments :: headFragment">
+<title id="pageTitle">AIBTGlobal Student - Release or Withdraw</title>
+</head>
+
+<body>
+	<nav th:replace="student/fragments :: navFragment"></nav>
+
+	<div class="bottom" style="padding-bottom: 300px">
+		<div class="">
+			<p class="rightTit">Release or Withdraw</p>
+			<div class="rightcon">
+
+				<p class="rightTit">Withdraw</p>
+				<br>
+				<form id="randwform" method="post"
+					th:action="${#httpServletRequest.requestURI}"
+					enctype="multipart/form-data" th:object="${randwApplication}">
+					<div class="tijiaoconlist">
+						<p class="tijiaoconlistL">Comments*:</p>
+						<p class="tijiaoconlistR">
+							<textarea id="comments" th:field="*{content}" class="form-control"
+								placeholder="Please provide your reasons of withdrawal in at least 20 words"
+								required pattern="^\s*(\S+\s+){20,}\S*$"
+								oninvalid="this.setCustomValidity('Explain in at least 20 words')"
+								oninput="setCustomValidity('')"></textarea>
+						</p>
+					</div>
+					<br>
+					<div class="tijiaoconlist">
+						<p class="tijiaoconlistL">Attachment*:</p>
+						<p class="tijiaoconlistR">
+							• Flight ticket<br> • visa grant or non-grant notice
+						</p>
+					</div>
+
+					<div class="form-group">
+						<div class="tijiaoconlist" style="line-height: 1.5;">
+							<div class="tijiaoconlistR">
+								<div class="file-loading">
+									<input id="input-files" type="file"
+										th:field="*{multipartFilesDocument}" multiple required
+										oninvalid="this.setCustomValidity('Please attach your flight ticket or other relevant document')"
+										oninput="setCustomValidity('')">
+								</div>
+							</div>
+						</div>
+					</div>
+					<br>
+
+					<div class="tijiaoconlist">
+						<p class="tijiaoconlistL">Attachment:</p>
+						<p class="tijiaoconlistR">Other supporting documents (relevant
+							to the reasons pre-scribed)<br>
+							• Flight itinerary<br> • Affidavit<br> • Court Order<br>
+							• Written directive(s) issued by governmental body(ies)</p>
+					</div>
+
+					<div class="form-group">
+						<div class="tijiaoconlist" style="line-height: 1.5;">
+							<div class="tijiaoconlistR">
+								<div class="file-loading">
+									<input id="input-files1" type="file"
+										th:field="*{multipartFilesDocument}" multiple>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<input type="hidden" th:field="*{address}">
+					<input type="hidden" th:field="*{email}"> 
+					<input type="hidden" th:field="*{phone}"> 
+					<input type="hidden" th:field="*{trainer}">
+					
+					<div class=" d-flex justify-content-end">
+						<button type="submit" id="abc" class="btn btn-success mb-2" onClick="return count_words();">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function() {
+			// with plugin options
+			// Annotated by Dahoo on 19-08-2020: I donnot know why this is removed in newer version.
+			$("#input-files").fileinput({
+				theme : "fas",
+				browseClass : "btn btn-primary btn-block",
+				showCaption : false,
+				showRemove : false,
+				showUpload : false,
+				allowedFileExtensions : [ "jpg", "jpeg", "gif", "png", "pdf" ],
+				maxFileCount : 10,
+				maxFileSize : 5120,
+				previewFileType : "any"
+			});
+			$("#input-files1").fileinput({
+				theme : "fas",
+				browseClass : "btn btn-primary btn-block",
+				showCaption : false,
+				showRemove : false,
+				showUpload : false,
+				allowedFileExtensions : [ "jpg", "jpeg", "gif", "png", "pdf" ],
+				maxFileCount : 10,
+				maxFileSize : 5120,
+				previewFileType : "any"
+			});
+		});
+
+        	/*function count_words(){
+        		str1= document.getElementById("comments").value;
+        		if(str1.split(' ').length<20){
+            		alert("Please explain your reasoning in at least 20 words");
+            		return false;
+        		}else{
+        			return true;
+        		}
+        	}*/ 
+	</script>
+</body>
+</html>

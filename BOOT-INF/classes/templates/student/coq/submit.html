@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="student/fragments :: headFragment">
+        <title id="pageTitle">AIBTGlobal Student -Change of Qualification</title>
+   
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+    <script src="@{/js/bootstrap.min.js}"></script>
+    </head>
+    
+    <body>
+        <nav th:replace="student/fragments :: navFragment"></nav>
+        
+        <div class="bottom" style="padding-bottom: 300px">
+<!--
+            <div class="his-col">
+                <p>history</p>
+            </div>
+-->
+            
+            <div class="">
+                <p class="rightTit">
+                    Change of Qualification
+                </p>
+                
+                <div class="rightcon">
+                    <div class="three">
+
+                        <p>
+                            <img th:src="@{/image/xiaolian.png}" class="xiaolian">
+                        </p>
+                        
+                        <p>
+                            Your application has been submitted successfully!<br>
+                            Please confirm your change<br>
+                            Our staff will process your application within 48 hours.<br>
+                            Thanks for your patience!
+                        </p>
+                  
+                        <form method="get" action="/student/history">
+                            <div class="bootbtn">
+                                <button type="submit" class="btn btn-success">Confirm</button>
+                            </div>
+                        </form>
+<!--/* 
+                        <div th:replace="student/fragments :: pending"></div>
+ */-->             
+                        <!-- Annotated by Dahoo on 19-08-2020: this is from newer version. -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

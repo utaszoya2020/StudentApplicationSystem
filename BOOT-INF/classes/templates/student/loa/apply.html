@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="student/fragments :: headFragment">
+        <title id="pageTitle">AIBTGlobal Student - Leave of Absence</title>
+    </head>
+    
+    <body>
+        <nav th:replace="student/fragments :: navFragment"></nav>
+        
+        <div class="bottom" style="padding-bottom: 300px">
+            <div class="">
+                <p class="rightTit" id="check_defer" th:text="${defer}"></p>
+                
+                <div class="rightcon">
+                    <div class="two">
+                        <p>
+                            <b>Name:</b><span th:text="|${userObj.firstname} ${userObj.lastname}|"></span>
+                        </p>
+                        <p>
+                            <b>ID:</b>[[${userObj.id}]]
+                        </p>
+                    </div>
+                    
+                    <div class="two">
+                        <p>
+                            <b>Campus:</b>[[${userObj.campus}]]
+                        </p>
+                        <p>
+                            <b>Visa Type</b>[[${userObj.visaType}]]
+                        </p>
+                    </div>
+            
+                    <form id="loaForm" method="post" th:action="${#httpServletRequest.requestURI}" th:object="${loAApplication}">
+                        <div class="one">
+                            <p>
+                                <b>Current course:</b>
+                                <span th:text="${session.course}"></span>
+                            </p>
+                            <p>
+                                <b>Trainer:</b>
+                                <span>
+                                	<input type="text" id="trainer" th:field="*{trainer}" required>
+                                </span>
+                            </p>
+                            <p>
+                                <b>Please <a href="#" onclick="callstaff(); return false;">contact us</a> if your details are incorrect</b>    
+                            </p>
+                        </div>
+                    
+                        <div class="one">
+                            <p>
+                                <b>Address:</b>
+                                <span>
+                                    <input type="text" id="addressText" th:field="*{address}" disabled>
+                                </span>
+                                <a class="edit">
+                                    <img th:src="@{/image/edit.png}" id="addressEdit">
+                                </a>
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p>
+                                <b>Email:</b>
+                                <span>
+                                	<input type="text" id="emailText" th:field="*{email}" disabled>
+                                </span>
+                                <a class="edit">
+                                	<img th:src="@{/image/edit.png}" id="emailEdit">
+                                </a>
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p>
+                                <b>Phone:</b>
+                                <span>
+                                	<input type="text" id="phoneText" th:field="*{phone}" disabled>
+                                </span>
+                                <a class="edit">
+                                	<img th:src="@{/image/edit.png}" id="phoneEdit">
+                                </a>
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p>
+                                <b>Leave of Absence Start Date:</b><span><input type="text" id="start" th:field="*{start}" data-date-format="yyyy-mm-dd" required></span>
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p>
+                                <b>Leave of Absence End Date:</b><span><input type="text" id="end" th:field="*{end}" data-date-format="yyyy-mm-dd" required></span>
+                            </p>
+                        </div>
+                        
+                        <div class="one">
+                            <p >
+                                <b>Total weeks:</b><span><input type="text" class="Totalw" disabled></span>
+                            </p>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <input type="button" class="btn btn-success" value="Next" id="next">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            //Email address get input element
+            var email = document.getElementById("emailText");
+            var mark1 = 0;
+            // get kepup event
+            email.onkeyup = function()
+            {
+                // email reg
+                var reg = /^[0-9a-zA-Z_.-]+[@][0-9a-zA-Z_.-]+([.][a-zA-Z]+){1,2}$/;
+                if(reg.test(this.value))
+                {
+                    this.style.border = "1px solid green";
+                }
+                else
+                {
+                    this.style.border = "1px solid red";
+                    mark1 = 1;
+                }
+            }
+            
+            //Phone number get input element
+            var phonenum = document.getElementById("phoneText");
+            var mark2 = 0;
+            // get kepup event
+            phonenum.onkeyup = function()
+            {
+                // email reg
+                var reg = /^[0][4][0-9]{8}$/;
+                if(reg.test(this.value))
+                {
+                    this.style.border = "1px solid green";
+                }
+                else
+                {
+                    this.style.border = "1px solid red";
+                    mark2 = 1;
+                }
+            }
+            
+            
+            $(document).ready(function(){
+                $('#dropdown-list').removeClass("d-none");
+                
+                var defer = $('#check_defer').prop("name");
+                if(defer == "yes"){
+                    $('#check_defer').html("Deferment");
+                }
+            });
+            
+            laydate.render({
+                elem: '#start', lang:'en',
+                done:function(value, date, endDate){
+                	$('#start').change();
+                	checkStartDate();
+                }
+            });
+            
+            laydate.render({
+                elem: '#end', lang:'en',
+                done:function(){
+                	$('#end').change();
+                	checkDate();
+                }
+            });
+            
+            function checkStartDate(){
+            	var startTime= new Date($("#start").val());
+            	var today = new Date();
+                today.setHours(0,0,0,0);
+                if(startTime.getTime() < today.getTime() + 1000*60*60*24 ){
+                    alert("The Start date cannot be earlier than tomorrow!");
+                    $("#start").val("");
+                    return false;
+                }
+            }
+            
+            function checkDate()
+            {
+                var startTime= new Date($("#start").val());
+                var endTime=new Date($("#end").val());
+
+                if($("#start").val()=='' || $("#end").val()=='')
+                {
+                    alert("Start date or End date can not be empty!");
+                    return false;
+                }
+                
+                if(startTime.getTime()>endTime.getTime())
+                {
+                    alert("The End date cannot be earlier than the Start date!");
+                    $("#end").val("");
+                    return false;
+                } else {
+                    s1 = $("#start").val();
+                    s2 = $("#end").val();
+                    s3 = getDays(s1,s2);
+                    $(".Totalw").val(getDays(s1,s2).toFixed(1));
+                }
+                
+                var current = $('#check_defer').html();
+                if(s3 >= 4 && current == "Leave of Absence")
+                {
+                    var message = confirm("Absence from your study for more than 4 weeks would be considered as deferment. Are you willing to proceed the deferment application?");
+                    if(message == true)
+                    {
+                        $('#check_defer').html("Deferment");
+                        return false;
+                    }
+                    else if(message == false)
+                    {
+                        return false;
+                    }
+                }
+                else if(s3 < 4 && current == "Deferment"){
+                    var message = confirm("For any absence from studying to be considered as deferement, it must be 4 weeks or more. Are you willing to proceed the leave of absence application?");
+                    
+                    if(message == true)
+                    {
+                        $('#check_defer').html("Leave of Absence");
+                        return false;
+                    }
+                    else if(message == false)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            
+            $(document).ready(function(){
+                $('#start').change(function(){
+                    checkStartDate();
+                });
+                $('#end').change(function(){
+                   checkDate();
+                });
+                
+                $('#next').click(function(){
+                    if(mark1 != 1 && mark2 != 1)
+                    {
+                        if(checkDate())
+                        {
+                            loaForm.submit();
+                        }
+                    }
+                    else
+                    {
+                        alert("Please check your input details");
+                    }
+                    
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="student/fragments :: headFragment">
+        <title id="pageTitle">AIBTGlobal Student</title>
+    </head>
+    
+    <body>
+        <nav th:replace="student/fragments :: navFragment"></nav>
+        
+        <div class="bottom">
+            <div class="">
+                <div class="rightcon">
+                    <div id="1">
+                        <div class="one">
+                            <h2>Welcome to Student Support Services</h2><br>
+                        </div>
+                    
+                        <div>
+<!--                        <b>Please choose one of the services from the combo box above.</b>-->
+                            <b>Please agree the satement</b>
+                        </div>
+<!--
+                    <div class="one">
+                        <b>You can apply for Leave of Absence, Withdrawal and Release, Change of Campus, Change of Qualification, Credit Transfer</b>
+                    </div>
+-->
+                    <!-- Changed -->
+                        <div class="three xieyi">
+                            <p style="width: 20px">
+                                <b style="display: inline-block"><input type="checkbox" id="tongyi" name="tongyi" value="yes"></b>
+                            </p>
+                        
+                            <p style="width: 90%">
+                                <label for="tongyi">
+                                    I’m awared that all the documents I submit should be real, any fake documents or lies might cause the delay or reject of my application.
+                                </label>
+                            </p>
+                        </div>
+                
+                        <div class="bootbtn d-none">
+                            <input type="button" id="next-button" class="btn btn-success" value="Next">
+                        </div>
+                    </div>
+                    
+                    <div id="2" class="one d-none">
+                        <b>Please choose one of the services from the combo box above</b><br>
+                        <p><strong>You can apply for:</strong></p>
+                        <ul>
+                            <li><b>Leave of Absence</b></li>
+                            <li><b>Change of Campus</b></li>
+                            <li><b>Withdrawal and Release</b></li>
+                            <li><b>Change of Qualification</b></li>
+                            <li><b>Credit Transfer</b></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="oneSig one d-none">
+                        <b>Please upload your signature below:</b>
+                        <br>
+                        <canvas id="pad" width="300" height="100" style="border: 5px solid #218838;"></canvas>
+                        <br>
+                        <button id="clear-signature">Clear</button>
+                        <button id="upload-signature">Upload</button>
+                    </div>
+                    <div class="one d-none" id="twoSig">
+                        <b>You've had signature already. Do you want to update your signature? </b>
+                        <button id="positive">Yes</button> 
+                        <button id="negative">No</button>
+                        <div class="xx one d-none">
+                            <br>
+                            <canvas id="pad1" width="300" height="100" style="border: 5px solid #218838;"></canvas>
+                            <br>
+                            <button id="clear-signature2">Clear</button>
+                            <button id="upload-signature2">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            // check if the visitor is current student or not
+            $(document).ready(function(){
+
+                // Check signature
+                var sig = [[${session.Signature}]];
+                if(sig == 0)
+                {
+                    $('.oneSig').removeClass('d-none');
+                    $('#twoSig').addClass('d-none');
+                    $('.xx').addClass('d-none');
+                }
+                else
+                {
+                    $('#twoSig').removeClass('d-none');
+                }
+                //
+                $('#positive').on('click',function(){
+                    //document.getElementById("#pad").remove();
+                    signaturePad = new SignaturePad($('#pad1').get(0));
+                	$('.xx').removeClass('d-none');
+                    
+                    
+                });
+                $('#negative').on('click',function(){
+                    //document.getElementById("#pad1").remove();
+                	$('.xx').addClass('d-none');
+                    
+                });
+                
+                
+                // Fee check (Fully functional)
+                var fee = [[${session.AmountDue}]];
+                  if(fee > 0)
+                  {
+                      var message = confirm("Please pay "+fee);
+                      
+                      if(message == true)
+                      {
+                          window.location.href = "https://aibtglobal.edu.au/";
+                          //return false;
+                      }
+                      else if(message == false)
+                      {
+                          $('#fee_btn').click();
+                      }
+                  }
+                
+                $('input[name="tongyi"]').click(function(){
+                    if(this.checked)
+                        $('.bootbtn').removeClass('d-none');
+                    else
+                        $('.bootbtn').addClass('d-none');
+                });
+                
+                $('#next-button').click(function(){
+                    $('#dropdown-list').removeClass("d-none");
+                    $('#2').removeClass('d-none');
+                    $('#1').addClass('d-none');
+                    $('.oneSig').addClass('d-none');
+                    $('#twoSig').addClass('d-none');
+                });
+                
+                // for signature
+                function dataURLToBlob(dataURL){
+                	var parts = dataURL.split(';base64,');
+                	var contentType = parts[0].split(":")[1];
+                	var raw = window.atob(parts[1]);
+                	var rawLength = raw.length;
+                	var uInt8Array = new Uint8Array(rawLength);
+                	
+                	for(var i=0; i<rawLength; ++i){
+                		uInt8Array[i] = raw.charCodeAt(i);
+                	}
+                	
+                	return new Blob([uInt8Array], { type: contentType });
+                	
+                }
+                
+                function download(dataURL, filename){
+                	if(navigator.userAgent.indexOf("Safari")>-1 && navigator.userAgent.indexOf("Chrome") === -1)
+                		{
+                		window.open(dataURL);
+                		}else{
+                	var blob = dataURLToBlob(dataURL);
+                	var url = window.URL.createObjectURL(blob);
+                	console.log(url);
+                	
+                	var a = document.createElement("a");
+                	a.style="display:none";
+                	a.href=url;
+                	a.download=filename;
+                	document.body.appendChild(a);
+                	a.click();
+                	
+                	window.URL.revokeObjectURL(url);
+                		}
+                }
+
+                var signaturePad = new SignaturePad($('#pad').get(0));
+                $('#clear-signature').on('click',function(){
+                    signaturePad.clear();
+                });
+                $('#clear-signature2').on('click',function(){
+                    signaturePad.clear();
+                });
+                
+
+                $('#save-signature').on('click',function(){
+                	if(signaturePad.isEmpty()){
+                		alert("Please provide a signature first.")
+                		//$('#save-signature').href="#";
+                	}else{
+                		var dataURL=signaturePad.toDataURL();
+                		console.log(dataURL);
+                		download(dataURL, "signature.png");
+                	} 
+                });
+
+                $('#upload-signature').on('click',function(){
+                    if(signaturePad.isEmpty()){
+                		alert("Please provide a signature first.")
+                	}else{
+                        var token = $("meta[name='_csrf']").attr("content");
+                        console.log('token is:'+token);
+                        var dataURL=signaturePad.toDataURL();
+                        var parts = dataURL.split(';base64,');
+                        var raw = parts[1];
+                       // requestData[_csrf_param_name] = _csrf_token; // Adds the token
+
+                        $.ajax({
+                        url: "/student/uploadSignature",
+                        headers: {"X-CSRF-TOKEN": token}, //send CSRF token in header
+                        method: "post",
+                        //data: raw,
+                        data:JSON.stringify({"signature":raw}),
+                        contentType: "application/json",
+
+                        success: function(data) {
+                            if (data == "success") {
+                               alert("success");
+                            }
+                            else if(data == "failure"){
+                                alert("file already exist!");
+                            }
+                        },
+                        error: function(data) {
+                            alert("something wrong!");
+                        }
+                        });
+                    }
+                });
+                
+                $('#upload-signature2').on('click',function(){
+                    if(signaturePad.isEmpty()){
+                		alert("Please provide a signature first.")
+                	}else{
+                        var token = $("meta[name='_csrf']").attr("content");
+                        console.log('token is:'+token);
+                        var dataURL=signaturePad.toDataURL();
+                        var parts = dataURL.split(';base64,');
+                        var raw = parts[1];
+                       // requestData[_csrf_param_name] = _csrf_token; // Adds the token
+
+                        $.ajax({
+                        url: "/student/uploadSignature",
+                        headers: {"X-CSRF-TOKEN": token}, //send CSRF token in header
+                        method: "post",
+                        //data: raw,
+                        data:JSON.stringify({"signature":raw}),
+                        contentType: "application/json",
+
+                        success: function(data) {
+                            if (data == "success") {
+                               alert("success");
+                            }
+                            else if(data == "failure"){
+                                alert("file already exist!");
+                            }
+                        },
+                        error: function(data) {
+                            alert("something wrong!");
+                        }
+                        });
+                    }
+                });
+
+            });
+        </script>
+        
+    </body>
+</html>
